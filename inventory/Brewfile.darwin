@@ -14,6 +14,7 @@ tap "zippoxer/tap"
 
 # macOS-specific formulae
 brew "azure-cli"
+brew "mole"
 brew "composer"
 brew "container", link: false
 brew "gemini-cli"

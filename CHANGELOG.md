@@ -9,6 +9,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+### Fixed
+- Moved mole from Brewfile.common to Brewfile.darwin (macOS-only in Homebrew)
+
 ### Added
 - macOS defaults script with current non-default settings (`scripts/macos-defaults.sh`) [macOS]
 - Chezmoi run_once script for Homebrew package installation (`run_once_after_brew-bundle.sh.tmpl`)
