@@ -1,0 +1,26 @@
+# ABOUTME: sesh configuration for named tmux sessions
+# ABOUTME: Defines quick-access sessions with friendly names
+
+# Show config sessions before zoxide results
+sort_order = ["config", "tmux", "zoxide"]
+
+# Default session settings
+[default_session]
+startup_command = "nvim"
+
+# Named sessions
+[[session]]
+name = "vault"
+path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/vault-002"
+
+[[session]]
+name = "family"
+path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/family"
+
+[[session]]
+name = "os"
+path = "~/Code/personal/os"
+
+[[session]]
+name = "pai"
+path = "~/Code/personal/pai-config"

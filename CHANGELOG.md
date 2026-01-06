@@ -13,7 +13,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - Brewfile.common: sesh (smart tmux session manager with zoxide integration)
 - tmux: tmux-sessionx plugin (fuzzy session manager with preview, `C-a o`)
 - tmux: tmux-floax plugin (floating pane scratchpad, `C-a p`)
-- tmux: sessionx custom-paths (Obsidian vaults pinned) and x-path (~/.config)
+- tmux: sessionx x-path (~/.config)
+- sesh: config with named sessions (vault, family, os, pai)
 
 ### Fixed
 - Moved mole from Brewfile.common to Brewfile.darwin (macOS-only in Homebrew)
