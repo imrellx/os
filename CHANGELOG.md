@@ -17,6 +17,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - CLAUDE.md: Added "Depending on What Changed" table for chezmoi/brew actions
 - CLAUDE.md: Added "Common Tasks" quick reference
 - CLAUDE.md: Restored "Autonomy Check" callout section
+- CLAUDE.md: Added "Session Start" section with memory search and design doc read requirements
 
 ### Added
 - macOS defaults script with current non-default settings (`scripts/macos-defaults.sh`) [macOS]

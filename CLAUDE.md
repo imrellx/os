@@ -3,7 +3,14 @@
 
 # OS Management Workspace
 
-Command center for managing Ivo's machines via chezmoi.
+Command center for managing Ivo's machines. Claude is the executing agent for ALL OS-level tasks.
+
+## Session Start
+
+Before doing anything:
+1. Search episodic memory for past conversations about this project
+2. Read `docs/plans/2026-01-06-os-management-design.md` for full context
+3. Understand: this manages the ENTIRE computer, not just dotfiles
 
 ## Machines
 
