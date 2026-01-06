@@ -28,7 +28,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - Installed and configured chezmoi (source: os/home/)
 - Migrated to chezmoi: zsh, starship, git, mise configs
 - Migrated to chezmoi: ghostty, nvim (LazyVim), tmux, lazygit, aerospace, hyprspace
-- Added cross-platform templates for homebrew.zsh, aliases.zsh, ghostty, tmux
+- Migrated to chezmoi: fonts (83 files), gh, wezterm, alacritty, borders, yazi, superfile, zellij
+- Added cross-platform templates for homebrew.zsh, aliases.zsh, ghostty, tmux, alacritty, wezterm
+- Added run_once script for platform-specific font installation
 - Created .chezmoiignore for platform-specific deployments
 - Added bash configs for Linux (aliases.bash, homebrew.bash, .bashrc)
 - Split Brewfile into common + darwin + linux overlays
