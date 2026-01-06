@@ -307,14 +307,14 @@ ss() {
   if [ $# -eq 0 ]; then
     local selected
     selected=$(sesh list | fzf \
-      --height 80% \
+      --height 60% \
       --reverse \
       --border rounded \
       --border-label ' Sessions ' \
       --prompt '  ' \
       --pointer '▶' \
       --preview 'sesh preview {}' \
-      --preview-window 'right:50%:wrap' \
+      --preview-window 'right:45%:wrap' \
       --header '/ to search, enter to connect' \
       --color 'header:italic:dim')
     [ -n "$selected" ] && sesh connect "$selected"
