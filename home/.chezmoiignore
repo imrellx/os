@@ -1,5 +1,9 @@
-# ABOUTME: chezmoi ignore patterns for cross-platform deployments
-# ABOUTME: Excludes platform-specific configs from non-matching systems
+# ABOUTME: chezmoi ignore patterns for cross-platform and profile-based deployments
+# ABOUTME: Excludes configs based on OS and user-selected installation profile
+
+# ============================================================================
+# Platform-specific exclusions
+# ============================================================================
 
 # macOS-only configs (exclude on Linux)
 {{ if ne .chezmoi.os "darwin" }}
@@ -16,7 +20,75 @@
 .bashrc
 {{ end }}
 
+# ============================================================================
+# Profile-based exclusions (defaults to install everything if not configured)
+# Run `chezmoi init` to configure your installation profile
+# ============================================================================
+
+{{- $editors := true -}}
+{{- $terminals := true -}}
+{{- $multiplexers := true -}}
+{{- $file_managers := true -}}
+{{- $dev_tools := true -}}
+{{- $window_managers := true -}}
+{{- $fonts := true -}}
+
+{{- if hasKey . "install_editors" }}{{ $editors = .install_editors }}{{ end -}}
+{{- if hasKey . "install_terminals" }}{{ $terminals = .install_terminals }}{{ end -}}
+{{- if hasKey . "install_multiplexers" }}{{ $multiplexers = .install_multiplexers }}{{ end -}}
+{{- if hasKey . "install_file_managers" }}{{ $file_managers = .install_file_managers }}{{ end -}}
+{{- if hasKey . "install_dev_tools" }}{{ $dev_tools = .install_dev_tools }}{{ end -}}
+{{- if hasKey . "install_window_managers" }}{{ $window_managers = .install_window_managers }}{{ end -}}
+{{- if hasKey . "install_fonts" }}{{ $fonts = .install_fonts }}{{ end -}}
+
+# Editors (nvim, helix)
+{{ if not $editors }}
+.config/nvim/
+.config/helix/
+{{ end }}
+
+# Terminals (ghostty, alacritty, wezterm)
+{{ if not $terminals }}
+.config/ghostty/
+.config/alacritty/
+.config/wezterm/
+{{ end }}
+
+# Multiplexers (tmux, zellij)
+{{ if not $multiplexers }}
+.config/tmux/
+.config/zellij/
+{{ end }}
+
+# File managers (yazi, superfile)
+{{ if not $file_managers }}
+.config/yazi/
+.config/superfile/
+{{ end }}
+
+# Dev tools (gh, lazygit, mise)
+{{ if not $dev_tools }}
+.config/gh/
+.config/lazygit/
+.config/mise/
+{{ end }}
+
+# Window managers (aerospace, hyprspace, borders) - also requires macOS
+{{ if not $window_managers }}
+.config/aerospace/
+.config/hyprspace/
+.config/borders/
+{{ end }}
+
+# Fonts
+{{ if not $fonts }}
+.config/fonts/
+run_once_install-fonts.sh
+{{ end }}
+
+# ============================================================================
 # Always ignore
+# ============================================================================
 **/.DS_Store
 **/*.bak
 **/.*~

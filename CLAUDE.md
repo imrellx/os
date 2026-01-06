@@ -8,7 +8,7 @@ Command center for managing Ivo's machines via chezmoi.
 ## Machines
 
 - **Primary**: MacBook (macOS)
-- **Secondary**: Linux laptops (Ubuntu, Omakub)
+- **Secondary**: Linux laptops (Omarchy)
 - **Ephemeral**: VMs as needed
 
 ## Autonomy Tiers
@@ -45,6 +45,7 @@ Command center for managing Ivo's machines via chezmoi.
 ## Key Commands
 
 ```bash
+chezmoi init            # First-time setup (prompts for profile)
 chezmoi apply           # Deploy configs
 chezmoi apply --dry-run # Preview changes
 chezmoi diff            # Show pending changes
@@ -52,16 +53,32 @@ chezmoi edit <file>     # Edit source file
 chezmoi add <file>      # Add existing file to management
 ```
 
-## Inventory
+## Installation Profiles
 
-Living snapshots in `inventory/`. Update when system changes.
-Regenerate with `scripts/snapshot.sh`.
+Run `chezmoi init` to select a profile:
+
+| Profile | Includes |
+|---------|----------|
+| **minimal** | shell, git, starship |
+| **developer** | + editors, terminals, multiplexers, file managers, dev tools |
+| **full** | + window managers, fonts (110MB) |
+| **custom** | Pick each category individually |
+
+Categories:
+- **shell**: zsh (macOS) / bash (Linux), starship prompt
+- **editors**: nvim (LazyVim), helix
+- **terminals**: ghostty, alacritty, wezterm
+- **multiplexers**: tmux, zellij
+- **file_managers**: yazi, superfile
+- **dev_tools**: gh, lazygit, mise
+- **window_managers**: aerospace, hyprspace, borders (macOS only)
+- **fonts**: 83 font files (~110MB)
 
 ## Shell Strategy
 
-- macOS: zsh (dot_zshrc.tmpl)
-- Linux: bash (dot_bashrc.tmpl) or zsh where available
-- Shared config: dot_config/shell/common.sh (sourced by both)
+- macOS: zsh (`~/.config/zsh/`)
+- Linux: bash (`~/.config/bash/`)
+- Bootstrap: `~/.zshenv` (macOS) / `~/.bashrc` (Linux) redirect to XDG locations
 
 ## Homebrew
 
@@ -70,6 +87,6 @@ Supplementary package manager on both platforms.
 - Linux prefix: /home/linuxbrew/.linuxbrew
 
 Brewfiles in `inventory/`:
-- `Brewfile` - Cross-platform packages
-- `Brewfile.macos` - macOS-only (casks, etc.)
-- `Brewfile.linux` - Linux-specific if needed
+- `Brewfile.common` - Cross-platform CLI tools
+- `Brewfile.darwin` - macOS casks, vscode extensions, zsh plugins
+- `Brewfile.linux` - Linux-specific (placeholder)

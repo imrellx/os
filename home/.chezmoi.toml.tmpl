@@ -1,0 +1,54 @@
+# ABOUTME: Chezmoi configuration with interactive profile selection
+# ABOUTME: Prompts user at init time to select which configs to install
+
+{{- /* Profile selection */ -}}
+{{- $profile := promptChoiceOnce . "profile" "Select installation profile" (list "minimal" "developer" "full" "custom") -}}
+
+{{- /* Define what each profile includes */ -}}
+{{- $install_shell := true -}}
+{{- $install_git := true -}}
+{{- $install_editors := false -}}
+{{- $install_terminals := false -}}
+{{- $install_multiplexers := false -}}
+{{- $install_file_managers := false -}}
+{{- $install_dev_tools := false -}}
+{{- $install_window_managers := false -}}
+{{- $install_fonts := false -}}
+
+{{- if eq $profile "minimal" -}}
+  {{- /* minimal: shell + git only */ -}}
+{{- else if eq $profile "developer" -}}
+  {{- $install_editors = true -}}
+  {{- $install_terminals = true -}}
+  {{- $install_multiplexers = true -}}
+  {{- $install_file_managers = true -}}
+  {{- $install_dev_tools = true -}}
+{{- else if eq $profile "full" -}}
+  {{- $install_editors = true -}}
+  {{- $install_terminals = true -}}
+  {{- $install_multiplexers = true -}}
+  {{- $install_file_managers = true -}}
+  {{- $install_dev_tools = true -}}
+  {{- $install_window_managers = true -}}
+  {{- $install_fonts = true -}}
+{{- else if eq $profile "custom" -}}
+  {{- $install_editors = promptBoolOnce . "install_editors" "Install editors (nvim, helix)" -}}
+  {{- $install_terminals = promptBoolOnce . "install_terminals" "Install terminals (ghostty, alacritty, wezterm)" -}}
+  {{- $install_multiplexers = promptBoolOnce . "install_multiplexers" "Install multiplexers (tmux, zellij)" -}}
+  {{- $install_file_managers = promptBoolOnce . "install_file_managers" "Install file managers (yazi, superfile)" -}}
+  {{- $install_dev_tools = promptBoolOnce . "install_dev_tools" "Install dev tools (gh, lazygit, mise)" -}}
+  {{- $install_window_managers = promptBoolOnce . "install_window_managers" "Install window managers (aerospace, hyprspace, borders) [macOS only]" -}}
+  {{- $install_fonts = promptBoolOnce . "install_fonts" "Install fonts (83 files, ~110MB)" -}}
+{{- end -}}
+
+[data]
+    profile = {{ $profile | quote }}
+    install_shell = {{ $install_shell }}
+    install_git = {{ $install_git }}
+    install_editors = {{ $install_editors }}
+    install_terminals = {{ $install_terminals }}
+    install_multiplexers = {{ $install_multiplexers }}
+    install_file_managers = {{ $install_file_managers }}
+    install_dev_tools = {{ $install_dev_tools }}
+    install_window_managers = {{ $install_window_managers }}
+    install_fonts = {{ $install_fonts }}
