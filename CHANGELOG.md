@@ -14,6 +14,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - Chezmoi run_once script for Homebrew package installation (`run_once_after_brew-bundle.sh.tmpl`)
 - Zig to mise config
 
+### Fixed (brew-bundle script)
+- Moved shebang to first line (was after ABOUTME comments)
+- Replaced invalid `--no-lock` flag with `--no-upgrade`
+
 ### Fixed (ZSH config overhaul)
 - STARSHIP_CONFIG now exported before starship init (was ignored)
 - EDITOR changed from nonexistent 'vl' to 'nvim'
@@ -29,7 +33,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ### Removed
 - Original monolithic Brewfile (now split into common/darwin/linux overlays)
-- Deprecated Homebrew casks: alacritty, chromium, syntax-highlight
+- Deprecated Homebrew casks from system: alacritty, chromium, syntax-highlight
+- Deprecated casks from Brewfile.darwin: alacritty, arc, chromium, powershell, syntax-highlight
 - Backup files from ~/.config/zsh/ (aliases copy.zsh, titus-bashrc)
 
 ### Fixed

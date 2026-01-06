@@ -38,9 +38,7 @@ brew "zippoxer/tap/recall"
 
 # Casks (macOS GUI applications)
 cask "1password-cli", args: { appdir: "/Applications" }
-cask "alacritty", args: { appdir: "/Applications" }
-cask "arc"
-cask "chromium"
+# alacritty, arc, chromium removed (deprecated/unused)
 cask "claude", args: { appdir: "/Applications" }
 cask "claude-code"
 cask "codex"
@@ -67,10 +65,9 @@ cask "obsidian", args: { appdir: "/Applications" }
 cask "omniwm"
 cask "orbstack", args: { appdir: "/Applications" }
 cask "pearcleaner", args: { appdir: "/Applications" }
-cask "powershell"
+# powershell, syntax-highlight removed (deprecated)
 cask "raycast", args: { appdir: "/Applications" }
 cask "shottr"
-cask "syntax-highlight", args: { appdir: "/Applications" }
 cask "telegram", args: { appdir: "/Applications" }
 cask "visual-studio-code", args: { appdir: "/Applications" }
 cask "vlc", args: { appdir: "/Applications" }
