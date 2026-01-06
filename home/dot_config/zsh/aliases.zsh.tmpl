@@ -302,4 +302,10 @@ alias oc="opencode"
 # -------------------------------
 # Terminal multiplexers
 # -------------------------------
-alias ss="sesh connect"
+ss() {
+  if [ $# -eq 0 ]; then
+    sesh connect "$(sesh list | fzf --height 40% --reverse)"
+  else
+    sesh connect "$@"
+  fi
+}
