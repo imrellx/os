@@ -14,6 +14,19 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - Chezmoi run_once script for Homebrew package installation (`run_once_after_brew-bundle.sh.tmpl`)
 - Zig to mise config
 
+### Fixed (ZSH config overhaul)
+- STARSHIP_CONFIG now exported before starship init (was ignored)
+- EDITOR changed from nonexistent 'vl' to 'nvim'
+- Removed missing notificator script reference from homebrew.zsh
+- Removed dangerous undopush alias (force push to master)
+- Consolidated duplicate .env loading (now only in .zshrc with comment handling)
+- Moved history settings from .zshenv to .zshrc (interactive shell only)
+- Moved pandoc alias from .zshenv to aliases.zsh
+- Simplified locale settings (removed redundant LC_* exports)
+- Cleaned up dead commented code in .zshrc
+- Removed unused utils_dir variable and empty utils/ directory
+- Consolidated duplicate cc/cc-start aliases into cc and ccc
+
 ### Removed
 - Original monolithic Brewfile (now split into common/darwin/linux overlays)
 - Deprecated Homebrew casks: alacritty, chromium, syntax-highlight

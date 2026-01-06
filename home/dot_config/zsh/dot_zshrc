@@ -1,8 +1,7 @@
-# ~/.config/zsh/.zshrc                                               #
+# ~/.config/zsh/.zshrc
 
-# Directory for all-things ZSH config
+# Directory for ZSH config
 zsh_dir=${${ZDOTDIR}:-$HOME/.config/zsh}
-utils_dir="${XDG_CONFIG_HOME}/utils"
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
@@ -11,6 +10,16 @@ utils_dir="${XDG_CONFIG_HOME}/utils"
 if [[ -f "$HOME/.env" ]]; then
   export $(grep -v '^#' "$HOME/.env" | grep -v '^$' | xargs)
 fi
+
+# History configuration
+export HISTFILE="${ZDOTDIR:-$HOME}/.zsh_history"
+export HISTSIZE=20000
+export SAVEHIST=$HISTSIZE
+setopt HIST_IGNORE_DUPS   # Don't record duplicates
+setopt HIST_REDUCE_BLANKS # Remove superfluous blanks
+setopt INC_APPEND_HISTORY # Write immediately to history file
+setopt HIST_NO_STORE      # Don't store history command itself
+setopt HIST_IGNORE_SPACE  # Commands with leading space not added
 
 # Source all ZSH config files (if present)
 if [[ -d $zsh_dir ]]; then
@@ -37,8 +46,8 @@ fi
 
 # Initialize Starship prompt, if it's installed
 if hash starship 2> /dev/null; then
-  eval "$(starship init zsh)"
   export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
+  eval "$(starship init zsh)"
 fi
 
 # Activate mise for tool version management
@@ -46,29 +55,13 @@ if hash mise 2> /dev/null; then
   eval "$(mise activate zsh)"
 fi
 
-# Source Zsh plugins installed by Homebrew
-#source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-#source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-#source $(brew --prefix)/share/zsh-history-substring-search/zsh-history-substring-search.zsh
-
-# These plugins must be sourced LAST
-#source $(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-#source $(brew --prefix)/share/zsh-autopair/zsh-autopair.plugin.zsh
-
-# Sophisticated version of the above lines
-# The conditional check would fail silently, and you might be left wondering why a specific feature isn't working.
-# Simplicity: The simple list of source commands is very clear and easy to read. the simple setup above.
-
-# Source Zsh plugins installed by Homebrew, if they exist
+# Source Zsh plugins installed by Homebrew (if they exist)
 local brew_prefix
 brew_prefix=$(brew --prefix)
 
 local plugins=(
   "$brew_prefix/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
   "$brew_prefix/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
- # "$brew_prefix/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
- # "$brew_prefix/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh"
- # "$brew_prefix/share/zsh-autopair/zsh-autopair.plugin.zsh"
 )
 
 for plugin_file in "${plugins[@]}"; do

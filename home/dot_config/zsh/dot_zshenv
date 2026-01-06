@@ -15,7 +15,7 @@ export XDG_RUNTIME_DIR="$HOME/.local/runtime" # macOS does not have session life
 export PATH="$HOME/.local/bin:$PATH"
 
 # Set default applications
-export EDITOR="vl"
+export EDITOR="nvim"
 export VISUAL="code"
 export TERMINAL="ghostty"
 # export BROWSER="zen-browser"
@@ -25,41 +25,22 @@ export TERMINAL="ghostty"
 export ZDOTDIR="${XDG_CONFIG_HOME}/zsh"
 export ZELLIJ_CONFIG_DIR="${XDG_CONFIG_HOME}/zellij"
 
-# Encodings, languges and misc settings
-#export LANG='en_GB.UTF-8';
-export PYTHONIOENCODING='UTF-8';
-#export LC_ALL='C';
-
+# Encodings and locale
 export LANG=en_GB.UTF-8
-export LC_ALL=en_GB.UTF-8
-export LC_CTYPE=en_GB.UTF-8
-export LC_MESSAGES=en_GB.UTF-8
+export PYTHONIOENCODING='UTF-8'
+# Note: LC_ALL deliberately not set - it overrides everything including user prefs
+# Set individual LC_* only if you need to override specific categories
 
 
 # Hide computer name in terminal
 export DEFAULT_USER="$(whoami)"
 
-# Secrets
-[ -f "$HOME/.env" ] && source "$HOME/.env"
+# Note: .env is loaded in .zshrc with proper comment handling
 
-# PANDOC
-# does not have an environment var for this, so using `--data-dir` alias
-alias pandoc='pandoc --data-dir="$HOME/.config/pandoc"'
+# Note: pandoc alias moved to aliases.zsh
+# Note: history settings moved to .zshrc (interactive shell only)
 
-# Specify the history file and its sizes
-setopt HIST_IGNORE_DUPS
-setopt HIST_REDUCE_BLANKS
-setopt INC_APPEND_HISTORY # write immediately to history file
-setopt HIST_NO_STORE      # ignore history command itself for the history
-setopt HIST_IGNORE_SPACE  # cmds with leading space are not added to the history
-
-export HISTFILE=~/.config/zsh/.zsh_history
-export HISTSIZE=20000
-export SAVEHIST=$HISTSIZE
-# don't save in `$ZDOTDIR` as it's in my public dotfile repo
-# export HISTFILE="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Dotfolder/zsh_history.zsh" #but mine isn't
-
-# Beads related *Important:** Daemon mode does NOT work correctly with `git worktree`. 
-# Git worktrees share the same `.git` directory and `.beads` database. The daemon may commit changes to the wrong branch.
-# Solutions
+# Beads related: Daemon mode does NOT work correctly with `git worktree`.
+# Git worktrees share the same `.git` directory and `.beads` database.
+# Uncomment if needed:
 # export BEADS_NO_DAEMON=1

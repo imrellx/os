@@ -87,9 +87,5 @@ function update() {
 		brew doctor
 	fi
 
-{{- if eq .chezmoi.os "darwin" }}
-	"$ZDOTDIR/notificator" --title "🍺 Homebrew" --message "Update finished." --sound "Blow"
-{{- else }}
 	echo "🍺 Homebrew update finished."
-{{- end }}
 }
