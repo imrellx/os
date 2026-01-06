@@ -7,6 +7,7 @@ sort_order = ["config", "tmux", "zoxide"]
 # Default session settings
 [default_session]
 startup_command = "nvim"
+preview_command = "eza --tree --level=2 --icons --git --color=always {}"
 
 # Named sessions
 [[session]]

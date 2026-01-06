@@ -305,7 +305,19 @@ alias oc="opencode"
 unalias ss 2>/dev/null
 ss() {
   if [ $# -eq 0 ]; then
-    sesh connect "$(sesh list | fzf --height 40% --reverse)"
+    local selected
+    selected=$(sesh list | fzf \
+      --height 80% \
+      --reverse \
+      --border rounded \
+      --border-label ' Sessions ' \
+      --prompt '  ' \
+      --pointer '▶' \
+      --preview 'sesh preview {}' \
+      --preview-window 'right:50%:wrap' \
+      --header '/ to search, enter to connect' \
+      --color 'header:italic:dim')
+    [ -n "$selected" ] && sesh connect "$selected"
   else
     sesh connect "$@"
   fi
