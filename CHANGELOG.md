@@ -12,9 +12,15 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 ### Added
 - macOS defaults script with current non-default settings (`scripts/macos-defaults.sh`) [macOS]
 - Chezmoi run_once script for Homebrew package installation (`run_once_after_brew-bundle.sh.tmpl`)
+- Zig to mise config
 
 ### Removed
 - Original monolithic Brewfile (now split into common/darwin/linux overlays)
+- Deprecated Homebrew casks: alacritty, chromium, syntax-highlight
+- Backup files from ~/.config/zsh/ (aliases copy.zsh, titus-bashrc)
+
+### Fixed
+- Linked unlinked `container` keg in Homebrew
 
 ## 2026-01-06
 

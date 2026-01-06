@@ -13,6 +13,7 @@ ruff = "latest"
 python = "3.13"
 jq = "latest"
 julia = "latest"
+zig = "latest"
 # java = "latest"
 
 [tasks."llm:generate_bundle"]
