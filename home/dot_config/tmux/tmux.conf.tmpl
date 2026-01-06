@@ -245,7 +245,8 @@ set -g @floax-change-path 'true'
 # Plugin settings
 #--------------------------------------------------------------------------
 # set -g @resurrect-capture-pane-contents 'on'
-set -g @continuum-restore 'on'
+# Disabled auto-restore - use `prefix + Ctrl-r` to restore manually
+set -g @continuum-restore 'off'
 
 run-shell ~/.config/tmux/plugins/tmux-resurrect/resurrect.tmux
 run '~/.config/tmux/plugins/tpm/tpm'

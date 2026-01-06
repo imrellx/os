@@ -15,6 +15,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - tmux: tmux-floax plugin (floating pane scratchpad, `C-a p`)
 - tmux: sessionx x-path (~/.config)
 - sesh: config with named sessions (vault, family, os, pai)
+- zsh: `ss` alias for `sesh connect`
+
+### Changed
+- tmux: disabled continuum auto-restore (use `C-a C-r` to restore manually)
 
 ### Fixed
 - Moved mole from Brewfile.common to Brewfile.darwin (macOS-only in Homebrew)
