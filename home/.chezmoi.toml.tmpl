@@ -1,6 +1,24 @@
 # ABOUTME: Chezmoi configuration with interactive profile selection
 # ABOUTME: Prompts user at init time to select which configs to install
 
+{{- /* Show profile preview */ -}}
+{{- writeToStdout "\n" -}}
+{{- writeToStdout "╭─────────────────────────────────────────────────────────────────╮\n" -}}
+{{- writeToStdout "│                    Installation Profiles                        │\n" -}}
+{{- writeToStdout "├─────────────────────────────────────────────────────────────────┤\n" -}}
+{{- writeToStdout "│ minimal    → shell (zsh/bash), git, starship                    │\n" -}}
+{{- writeToStdout "│                                                                 │\n" -}}
+{{- writeToStdout "│ developer  → minimal + nvim, helix, ghostty, alacritty,         │\n" -}}
+{{- writeToStdout "│              wezterm, tmux, zellij, yazi, superfile,            │\n" -}}
+{{- writeToStdout "│              gh, lazygit, mise                                  │\n" -}}
+{{- writeToStdout "│                                                                 │\n" -}}
+{{- writeToStdout "│ full       → developer + aerospace, hyprspace, borders,         │\n" -}}
+{{- writeToStdout "│              83 fonts (~110MB)                                  │\n" -}}
+{{- writeToStdout "│                                                                 │\n" -}}
+{{- writeToStdout "│ custom     → pick each category individually                    │\n" -}}
+{{- writeToStdout "╰─────────────────────────────────────────────────────────────────╯\n" -}}
+{{- writeToStdout "\n" -}}
+
 {{- /* Profile selection */ -}}
 {{- $profile := promptChoiceOnce . "profile" "Select installation profile" (list "minimal" "developer" "full" "custom") -}}
 
