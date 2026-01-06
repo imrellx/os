@@ -10,23 +10,23 @@ startup_command = "nvim"
 preview_command = "eza --tree --level=2 --icons --git --color=always {}"
 
 # Named sessions - Obsidian vaults
-# o: prefix = Obsidian GUI, v: prefix = nvim
+# o- prefix = Obsidian GUI, v- prefix = nvim
 [[session]]
-name = "o:vault"
+name = "o-vault"
 path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/vault-002"
 startup_command = "open 'obsidian://open?vault=vault-002'"
 
 [[session]]
-name = "o:family"
+name = "o-family"
 path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/family"
 startup_command = "open 'obsidian://open?vault=family'"
 
 [[session]]
-name = "v:vault"
+name = "v-vault"
 path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/vault-002"
 
 [[session]]
-name = "v:family"
+name = "v-family"
 path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/family"
 
 [[session]]
