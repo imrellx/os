@@ -9,6 +9,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+### Added
+- Brewfile.common: sesh (smart tmux session manager with zoxide integration)
+
 ### Fixed
 - Moved mole from Brewfile.common to Brewfile.darwin (macOS-only in Homebrew)
 
