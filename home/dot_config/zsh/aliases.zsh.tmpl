@@ -302,6 +302,7 @@ alias oc="opencode"
 # -------------------------------
 # Terminal multiplexers
 # -------------------------------
+unalias ss 2>/dev/null
 ss() {
   if [ $# -eq 0 ]; then
     sesh connect "$(sesh list | fzf --height 40% --reverse)"
