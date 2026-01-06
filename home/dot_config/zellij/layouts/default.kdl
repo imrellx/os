@@ -1,0 +1,14 @@
+zellij action new-pane --plugin file:/$HOME/.config/zellij/plugins/zellij_forgot.wasm --floating
+
+/Users/imrellx/.config/zellij/plugins/zellij_forgot.wasm
+
+zellij action new-pane --plugin file:/Users/imrellx/.config/zellij/plugins/zellij_forgot.wasm --floating
+
+
+shared_except "locked" {
+    bind "Ctrl y" {
+        LaunchOrFocusPlugin "file:/Users/imrellx/.config/zellij/plugins/zellij_forgot.wasm" {
+            floating true
+        }
+    }
+}

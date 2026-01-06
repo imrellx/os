@@ -1,0 +1,23 @@
+# ABOUTME: Alacritty terminal emulator configuration
+# ABOUTME: Cross-platform template with macOS-specific option handling
+
+[font]
+size = 20
+normal.family = "DankMono Nerd Font"
+bold.family = "DankMono Nerd Font"
+italic.family = "DankMono Nerd Font"
+bold_italic.family = "DankMono Nerd Font"
+
+[window]
+opacity = 0.9
+{{- if eq .chezmoi.os "darwin" }}
+option_as_alt = "OnlyLeft"
+{{- end }}
+decorations = "full"
+padding = { x = 3, y = 3 }
+dynamic_padding = true
+
+[general]
+import = [
+    "~/.config/alacritty/themes/jellybeans-default.toml",
+]

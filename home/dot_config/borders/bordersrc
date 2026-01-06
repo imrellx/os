@@ -1,0 +1,13 @@
+#!/bin/bash
+# ABOUTME: JankyBorders window border configuration (macOS only)
+# ABOUTME: Provides visual window focus indicators
+
+options=(
+	style=round
+	width=6.0
+	hidpi=on
+	active_color=0xffe2e2e3
+	inactive_color=0xff414550
+)
+
+borders "${options[@]}"
