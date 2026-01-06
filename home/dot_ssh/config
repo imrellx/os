@@ -1,0 +1,11 @@
+# ABOUTME: Main SSH config - includes modular configs from config.d/
+# ABOUTME: Managed by chezmoi, extracted from Royal TSX
+
+# OrbStack (must be at top before Host blocks)
+Include ~/.orbstack/ssh/config
+
+# Colima
+Include /Users/imrellx/.config/colima/ssh_config
+
+# Include all modular configs (loaded in alphabetical order)
+Include ~/.ssh/config.d/*

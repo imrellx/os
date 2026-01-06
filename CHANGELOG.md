@@ -19,6 +19,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - Brewfile.common: tmuxinator (session layout manager)
 - tmuxinator: starter templates (lab, troubleshoot, ssh-multi)
 - tmux: sessionx tmuxinator integration (`Ctrl-t` to list templates)
+- ssh: modular config.d/ structure with organized host configs
+- ssh: extracted 200+ hosts from Royal TSX (home, work-jump, work-network, via-jump)
+- ssh: 1Password SSH Agent integration in defaults
 
 ### Changed
 - tmux: disabled continuum auto-restore (use `C-a C-r` to restore manually)
