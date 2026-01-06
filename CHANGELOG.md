@@ -18,6 +18,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - Folder structure for chezmoi, inventory, scripts, docs
 - System audit documenting current state (193 formulae, 45 casks, 50+ configs)
 - Brewfile generated from current Homebrew state
+- Complete application inventory with usage status (~25 essential, ~10 to remove)
+
+### Changed
+- Simplified neovim to single config (LazyVim only, removed nvim-astrovim, nvim-adibhanna, nvim-cpplain)
+- Primary browser changed from Arc to Chrome (Zen as backup)
 
 ---
 
