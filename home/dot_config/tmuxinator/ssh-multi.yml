@@ -1,0 +1,25 @@
+# ABOUTME: tmuxinator template for multiple SSH sessions
+# ABOUTME: Quick multi-host access with synchronized panes option
+
+# Usage: tmuxinator start ssh-multi h1=host1 h2=host2 h3=host3
+
+name: ssh-multi
+root: ~/
+
+<% h1 ||= "host1" %>
+<% h2 ||= "host2" %>
+<% h3 ||= "host3" %>
+<% h4 ||= "" %>
+
+windows:
+  - sessions:
+      layout: tiled
+      # Set synchronize-panes on to type same command on all devices
+      # Toggle with: prefix + :setw synchronize-panes
+      panes:
+        - ssh <%= h1 %>
+        - ssh <%= h2 %>
+        - ssh <%= h3 %>
+<% if h4 != "" %>
+        - ssh <%= h4 %>
+<% end %>

@@ -16,6 +16,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - tmux: sessionx x-path (~/.config)
 - sesh: config with named sessions (vault, family, os, pai)
 - zsh: `ss` alias for `sesh connect`
+- Brewfile.common: tmuxinator (session layout manager)
+- tmuxinator: starter templates (lab, troubleshoot, ssh-multi)
+- tmux: sessionx tmuxinator integration (`Ctrl-t` to list templates)
 
 ### Changed
 - tmux: disabled continuum auto-restore (use `C-a C-r` to restore manually)

@@ -1,0 +1,23 @@
+# ABOUTME: tmuxinator template for network troubleshooting
+# ABOUTME: Device access, monitoring, and notes in one layout
+
+# Usage: tmuxinator start troubleshoot
+# With target: tmuxinator start troubleshoot host=192.168.1.1
+
+name: troubleshoot
+root: ~/
+
+<% host ||= "device.local" %>
+
+windows:
+  - main:
+      layout: main-horizontal
+      panes:
+        - device: ssh <%= host %>
+        - commands: # empty pane for running commands
+  - diag:
+      layout: even-horizontal
+      panes:
+        - ping: ping -i 1 <%= host %>
+        - trace: # for traceroute when needed
+  - notes: nvim ~/notes/troubleshoot-$(date +%Y%m%d).md
