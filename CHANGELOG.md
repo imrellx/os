@@ -27,6 +27,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 ### Infrastructure
 - Installed and configured chezmoi (source: os/home/)
 - Migrated to chezmoi: zsh, starship, git, mise configs
+- Migrated to chezmoi: ghostty, nvim (LazyVim), tmux, lazygit, aerospace
+- Added cross-platform templates for homebrew.zsh, aliases.zsh, ghostty, tmux
+- Created .chezmoiignore for platform-specific deployments (aerospace = macOS only)
 
 ---
 
