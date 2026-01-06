@@ -1,0 +1,48 @@
+# ABOUTME: Chezmoi run_once script to install Homebrew packages on first setup
+# ABOUTME: Runs after other configs are applied (run_once_after_)
+
+#!/bin/bash
+
+set -e
+
+echo "Installing Homebrew packages..."
+
+# Path to this repo's inventory
+INVENTORY_DIR="{{ .chezmoi.sourceDir }}/../inventory"
+
+# Check if Homebrew is installed
+{{- if eq .chezmoi.os "darwin" }}
+BREW_PREFIX="/opt/homebrew"
+{{- else }}
+BREW_PREFIX="/home/linuxbrew/.linuxbrew"
+{{- end }}
+
+if [[ ! -x "${BREW_PREFIX}/bin/brew" ]]; then
+    echo "Homebrew not found at ${BREW_PREFIX}. Skipping package installation."
+    echo "Install Homebrew first: https://brew.sh"
+    exit 0
+fi
+
+# Ensure brew is in PATH for this script
+eval "$(${BREW_PREFIX}/bin/brew shellenv)"
+
+# Install common packages
+if [[ -f "${INVENTORY_DIR}/Brewfile.common" ]]; then
+    echo "Installing common packages..."
+    brew bundle --file="${INVENTORY_DIR}/Brewfile.common" --no-lock
+fi
+
+# Install platform-specific packages
+{{- if eq .chezmoi.os "darwin" }}
+if [[ -f "${INVENTORY_DIR}/Brewfile.darwin" ]]; then
+    echo "Installing macOS packages..."
+    brew bundle --file="${INVENTORY_DIR}/Brewfile.darwin" --no-lock
+fi
+{{- else }}
+if [[ -f "${INVENTORY_DIR}/Brewfile.linux" ]]; then
+    echo "Installing Linux packages..."
+    brew bundle --file="${INVENTORY_DIR}/Brewfile.linux" --no-lock
+fi
+{{- end }}
+
+echo "Homebrew packages installed."

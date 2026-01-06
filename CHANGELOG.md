@@ -9,6 +9,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+### Added
+- macOS defaults script with current non-default settings (`scripts/macos-defaults.sh`) [macOS]
+- Chezmoi run_once script for Homebrew package installation (`run_once_after_brew-bundle.sh.tmpl`)
+
+### Removed
+- Original monolithic Brewfile (now split into common/darwin/linux overlays)
+
 ## 2026-01-06
 
 ### Added
