@@ -16,6 +16,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - Design document for OS management approach
 - CLAUDE.md with autonomy tiers and workflow
 - Folder structure for chezmoi, inventory, scripts, docs
+- System audit documenting current state (193 formulae, 45 casks, 50+ configs)
+- Brewfile generated from current Homebrew state
 
 ---
 
