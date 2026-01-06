@@ -1,0 +1,5 @@
+# Set the Zsh dotfiles directory
+export ZDOTDIR="$HOME/.config/zsh"
+
+# Source the real .zshenv from the new location
+[[ -s "$ZDOTDIR/.zshenv" ]] && source "$ZDOTDIR/.zshenv"

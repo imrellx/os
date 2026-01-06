@@ -1,0 +1,78 @@
+# ~/.config/zsh/.zshrc                                               #
+
+# Directory for all-things ZSH config
+zsh_dir=${${ZDOTDIR}:-$HOME/.config/zsh}
+utils_dir="${XDG_CONFIG_HOME}/utils"
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+# Load API keys from .env (for claude-mem worker and other tools)
+if [[ -f "$HOME/.env" ]]; then
+  export $(grep -v '^#' "$HOME/.env" | grep -v '^$' | xargs)
+fi
+
+# Source all ZSH config files (if present)
+if [[ -d $zsh_dir ]]; then
+  # Import alias files
+  source ${zsh_dir}/aliases.zsh
+  source ${zsh_dir}/homebrew.zsh
+ fi
+
+# Append Cargo to path, if it's installed
+if [[ -d "$HOME/.cargo/bin" ]]; then
+  export PATH="$HOME/.cargo/bin:$PATH"
+fi
+
+# Append Deno to path, if it's installed
+if [[ -d "$HOME/.deno" ]]; then
+  export DENO_INSTALL="$HOME/.deno"
+  export PATH="$DENO_INSTALL/bin:$PATH"
+fi
+
+# Add Zoxide (for cd, quick jump) to shell
+if hash zoxide 2> /dev/null; then
+    eval "$(zoxide init zsh)"
+fi
+
+# Initialize Starship prompt, if it's installed
+if hash starship 2> /dev/null; then
+  eval "$(starship init zsh)"
+  export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
+fi
+
+# Activate mise for tool version management
+if hash mise 2> /dev/null; then
+  eval "$(mise activate zsh)"
+fi
+
+# Source Zsh plugins installed by Homebrew
+#source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+#source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+#source $(brew --prefix)/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+# These plugins must be sourced LAST
+#source $(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+#source $(brew --prefix)/share/zsh-autopair/zsh-autopair.plugin.zsh
+
+# Sophisticated version of the above lines
+# The conditional check would fail silently, and you might be left wondering why a specific feature isn't working.
+# Simplicity: The simple list of source commands is very clear and easy to read. the simple setup above.
+
+# Source Zsh plugins installed by Homebrew, if they exist
+local brew_prefix
+brew_prefix=$(brew --prefix)
+
+local plugins=(
+  "$brew_prefix/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  "$brew_prefix/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+ # "$brew_prefix/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+ # "$brew_prefix/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh"
+ # "$brew_prefix/share/zsh-autopair/zsh-autopair.plugin.zsh"
+)
+
+for plugin_file in "${plugins[@]}"; do
+  if [[ -f "$plugin_file" ]]; then
+    source "$plugin_file"
+  fi
+done
