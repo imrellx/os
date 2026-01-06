@@ -20,6 +20,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - CLAUDE.md: Added "Session Start" section with memory search and design doc read requirements
 
 ### Added
+- Mac App Store section in Brewfile.darwin with UTM and Xcode
 - macOS defaults script with current non-default settings (`scripts/macos-defaults.sh`) [macOS]
 - Chezmoi run_once script for Homebrew package installation (`run_once_after_brew-bundle.sh.tmpl`)
 - Zig to mise config

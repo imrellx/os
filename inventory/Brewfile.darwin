@@ -159,3 +159,7 @@ vscode "wallabyjs.console-ninja"
 vscode "y-ysss.cisco-config-highlight"
 vscode "yzhang.markdown-all-in-one"
 vscode "zhuangtongfa.material-theme"
+
+# Mac App Store
+mas "UTM", id: 1538878817
+mas "Xcode", id: 497799835
