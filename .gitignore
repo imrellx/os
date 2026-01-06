@@ -1,0 +1,20 @@
+# ABOUTME: Git ignore patterns for OS config repository
+# ABOUTME: Excludes private data, editor cruft, and OS artifacts
+
+# Private data
+.private-journal/
+
+# macOS
+.DS_Store
+._*
+
+# Editor
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Backups
+*.bak
+*.backup

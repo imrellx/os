@@ -1,46 +1,50 @@
+# ABOUTME: Homebrew configuration and update functions
+# ABOUTME: Cross-platform template for macOS and Linux
 # ~/.config/zsh/homebrew.zsh
 # DOCS https://docs.brew.sh/Manpage#environment
 #───────────────────────────────────────────────────────────────────────────────
+
+{{- if eq .chezmoi.os "darwin" }}
 export HOMEBREW_CASK_OPTS="--no-quarantine"
+export HOMEBREW_UPGRADE_GREEDY_CASKS="obsidian microsoft-teams microsoft-word"
+export HOMEBREW_EDITOR="open"
+{{- else }}
+export HOMEBREW_EDITOR="${EDITOR:-vim}"
+{{- end }}
+
 export HOMEBREW_BUNDLE_FILE="$HOME/.config/Brewfile"
-export HOMEBREW_UPGRADE_GREEDY_CASKS="obsidian microsoft-teams microsoft-word" # to also update installer version
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_ENV_HINTS=1
-export HOMEBREW_EDITOR="open"           # open in default macOS text editor
-export HOMEBREW_DISPLAY_INSTALL_TIMES=1 # also serves as summary what was installed
-
-#alias bi='brew install'
-#alias br='brew reinstall'
-##alias bu='brew uninstall --zap'
-#alias bf='brew bundle edit' # opens [b]rew[f]ile with $HOMEBREW_EDITOR
-#alias bh='brew home'
-#alias depending_on='brew uses --installed --recursive'
+export HOMEBREW_DISPLAY_INSTALL_TIMES=1
 
 #───────────────────────────────────────────────────────────────────────────────
 
 function _pretty_header() {
 	[[ "$2" != "no-line-break" ]] && echo
+{{- if eq .chezmoi.os "darwin" }}
 	defaults read -g AppleInterfaceStyle &> /dev/null && fg="\e[1;30m" || fg="\e[1;37m"
+{{- else }}
+	# On Linux, assume dark terminal
+	fg="\e[1;37m"
+{{- end }}
 	bg="\e[1;44m"
 	print "$fg$bg $1 \e[0m"
 }
 
 function update() {
 	_pretty_header "brew update" "no-line-break"
-	brew update # update homebrew itself
+	brew update
 
 	_pretty_header "brew bundle install"
 	if ! brew bundle check --no-upgrade &> /dev/null; then
-		export HOMEBREW_COLOR=1                      # force color when piping output
-		brew bundle install --verbose --no-upgrade | # `--verbose` shows progress
+		export HOMEBREW_COLOR=1
+		brew bundle install --verbose --no-upgrade |
 			grep --invert-match --extended-regexp "^Using |^Skipping install of "
 	else
 		echo "✅ Brewfile satisfied."
 	fi
 
 	_pretty_header "brew bundle cleanup"
-	# not using `brew bundle install --cleanup`, since `brew bundle check` does
-	# only check for missing installs, not excess installs
 	if ! brew bundle cleanup &> /dev/null; then
 		brew bundle cleanup --force --zap
 	else
@@ -48,25 +52,30 @@ function update() {
 	fi
 
 	_pretty_header "brew upgrade"
-	# not combined with `brew bundle install` to visually separate them
 	if [[ -n $(brew outdated) ]]; then
 		brew upgrade
 	else
 		echo "✅ Already up-to-date."
 	fi
 
+{{- if eq .chezmoi.os "darwin" }}
 	_pretty_header "mas upgrade"
 	if [[ -n $(mas outdated) ]]; then
 		mas upgrade
 	else
 		echo "✅ Already up-to-date."
 	fi
+{{- end }}
 
-	# 10% of the time, run `brew doctor`, just to check if everything is fine
+	# 10% of the time, run `brew doctor`
 	if ((RANDOM % 100 < 10)); then
 		_pretty_header "brew doctor"
 		brew doctor
 	fi
 
+{{- if eq .chezmoi.os "darwin" }}
 	"$ZDOTDIR/notificator" --title "🍺 Homebrew" --message "Update finished." --sound "Blow"
+{{- else }}
+	echo "🍺 Homebrew update finished."
+{{- end }}
 }

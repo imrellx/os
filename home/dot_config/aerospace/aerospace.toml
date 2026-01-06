@@ -1,0 +1,64 @@
+# ABOUTME: AeroSpace window manager configuration (macOS tiling WM)
+# ABOUTME: Omarchy-style keybindings with vim-like focus navigation
+# AERO-SPACE: OMARCHY EDITION
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+start-at-login = true
+
+# 1. OMARCHY AESTHETICS (Hyprland Style Gaps)
+[gaps]
+inner.horizontal = 12
+inner.vertical =   12
+outer.left =       12
+outer.bottom =     12
+outer.top =        12 # Increase this to 40 if you install SketchyBar later
+outer.right =      12
+
+# 2. OMARCHY WORKFLOW LOGIC
+# Omarchy uses "Super" for WM. On Mac, we use "Alt" to preserve "Cmd" for apps.
+[mode.main.binding]
+
+# Terminal (Omarchy: Super+Enter)
+alt-enter = 'exec-and-forget open -n /Applications/Ghostty.app'
+
+# Launcher (Omarchy: Super+Space -> Raycast/Spotlight)
+# Note: macOS handles Cmd+Space natively. We map Alt+Space to Floating Toggle.
+alt-space = 'layout floating tiling'
+
+# Focus (Vim Style)
+alt-h = 'focus left'
+alt-j = 'focus down'
+alt-k = 'focus up'
+alt-l = 'focus right'
+
+# Move Windows
+alt-shift-h = 'move left'
+alt-shift-j = 'move down'
+alt-shift-k = 'move up'
+alt-shift-l = 'move right'
+
+# Workspaces (Omarchy defaults to 4 main workspaces)
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-5 = 'workspace 5'
+
+# Move to Workspace
+alt-shift-1 = 'move-node-to-workspace 1'
+alt-shift-2 = 'move-node-to-workspace 2'
+alt-shift-3 = 'move-node-to-workspace 3'
+alt-shift-4 = 'move-node-to-workspace 4'
+alt-shift-5 = 'move-node-to-workspace 5'
+
+# Fullscreen (Omarchy: Super+F)
+alt-f = 'fullscreen'
+
+# The "Panic Button" (Keep this, it's a lifesaver)
+alt-shift-r = 'reload-config'
+
+# 3. STARTUP HOOKS (The Secret Sauce)
+# This launches the border engine automatically
+
+# after-startup-command = [
+#     'exec-and-forget borders active_color=0xff7aa2f7 inactive_color=0xff292e42 width=5.0 hidpi=on'
+# ]

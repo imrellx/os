@@ -1,0 +1,48 @@
+# ABOUTME: Ghostty terminal emulator configuration
+# ABOUTME: Cross-platform template with macOS-specific options
+# This is the configuration file for Ghostty.
+
+# command to run on startup
+# command = zellij
+
+config-file = themes/jellybeans-flexoki
+# config-file = themes/warp-dark
+
+# Font configuration
+font-family = DankMono Nerd Font
+font-size = 20
+
+{{- if eq .chezmoi.os "darwin" }}
+macos-titlebar-style = transparent
+macos-option-as-alt = left
+{{- end }}
+mouse-hide-while-typing = true
+
+confirm-close-surface = false
+window-decoration = true
+window-padding-x = 10
+window-padding-y = 10
+window-padding-balance = true
+window-padding-color = extend
+
+# Terminal settings
+term = xterm-256color
+cursor-style = bar
+
+# Keybindings
+# Navigate between panes (vim-style)
+keybind = ctrl+h=goto_split:left
+keybind = ctrl+j=goto_split:bottom
+keybind = ctrl+k=goto_split:top
+keybind = ctrl+l=goto_split:right
+
+# Create a new split in the given direction
+keybind = alt+\=new_split:right
+keybind = alt+-=new_split:down
+
+# Resize the current split in a given direction
+keybind = alt+up=resize_split:up,10
+keybind = alt+down=resize_split:down,10
+keybind = alt+left=resize_split:left,10
+keybind = alt+right=resize_split:right,10
+keybind = shift+enter=text:\n

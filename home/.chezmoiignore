@@ -1,0 +1,17 @@
+# ABOUTME: chezmoi ignore patterns for cross-platform deployments
+# ABOUTME: Excludes platform-specific configs from non-matching systems
+
+# macOS-only configs (exclude on Linux)
+{{ if ne .chezmoi.os "darwin" }}
+.config/aerospace/
+{{ end }}
+
+# Linux-only configs (exclude on macOS)
+{{ if ne .chezmoi.os "linux" }}
+# Add Linux-specific paths here when needed
+{{ end }}
+
+# Always ignore
+**/.DS_Store
+**/*.bak
+**/.*~

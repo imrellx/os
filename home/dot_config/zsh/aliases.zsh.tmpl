@@ -1,0 +1,298 @@
+# ABOUTME: Shell aliases and functions
+# ABOUTME: Cross-platform template for macOS and Linux
+# ~/.config/zsh/aliases.zsh
+
+# -------------------------------
+# Helpers
+# -------------------------------
+command_exists() { (( $+commands[$1] )) }
+unalias cd 2>/dev/null
+
+# -------------------------------
+# eza aliases with fallback
+# -------------------------------
+if command_exists eza; then
+  alias l='eza -aF --icons'
+  alias la='eza -aF --icons'
+  alias ll='eza -laF --icons'
+  alias lm='eza -lahr --color-scale --icons -s=modified'
+  alias lb='eza -lahr --color-scale --icons -s=size'
+  alias tree='f() { eza -aF --tree -L=${1:-2} --icons }; f'
+  alias ls='eza -lh --group-directories-first --icons=auto'
+  alias lsa='ls -a'
+  alias lt='eza --tree --level=2 --long --icons --git'
+  alias lta='lt -a'
+else
+{{- if eq .chezmoi.os "darwin" }}
+  # macOS BSD ls
+  export CLICOLOR=1
+  export CLICOLOR_FORCE=1
+  alias l='ls -G'
+  alias la='ls -AG'
+  alias ll='ls -lAGh'
+  alias lm='ls -tAG'
+  alias lb='ls -lAGhS'
+  alias ls='ls -lGh'
+  alias lsa='ls -laGh'
+{{- else }}
+  # Linux GNU ls
+  alias l='ls --color=auto'
+  alias la='ls -A --color=auto'
+  alias ll='ls -lAh --color=auto'
+  alias lm='ls -lt --color=auto'
+  alias lb='ls -lAhS --color=auto'
+  alias ls='ls -lh --color=auto'
+  alias lsa='ls -lah --color=auto'
+{{- end }}
+  alias tree='f() { command find "${1:-.}" -maxdepth "${2:-2}" -print 2>/dev/null; }; f'
+  alias lt='tree'
+  alias lta='lt'
+fi
+
+# -------------------------------
+# fzf helpers
+# -------------------------------
+alias ff="fzf --preview 'bat --style=numbers --color=always {}'"
+
+# -------------------------------
+# zoxide-aware cd
+# -------------------------------
+zd() {
+  if (( $# == 0 )); then
+    builtin cd ~ && return
+  elif [[ -d "$1" ]]; then
+    builtin cd "$1"
+  else
+    z "$@" && printf " \U000F17A9 " && pwd || echo "Error: Directory not found"
+  fi
+}
+cd() { zd "$@"; }
+
+# -------------------------------
+# Git
+# -------------------------------
+alias gcm='git commit -m'
+alias gcam='git commit -a -m'
+alias gcad='git commit -a --amend'
+alias undopush="git push -f origin HEAD^:master"
+
+# -------------------------------
+# Config editing
+# -------------------------------
+alias ezrc='nvim ~/.config/zsh/.zshrc'
+alias szrc='source ~/.config/zsh/.zshrc'
+
+# -------------------------------
+# IP / Network
+# -------------------------------
+alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias myip='curl icanhazip.com'
+alias whois="whois -h whois-servers.net"
+{{- if eq .chezmoi.os "darwin" }}
+alias localip="ipconfig getifaddr en0"
+alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
+alias flush="dscacheutil -flushcache"
+alias sniff="sudo ngrep -d 'en0' -t '^(GET|POST) ' 'tcp and port 80'"
+{{- else }}
+alias localip="ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -1"
+alias ips="ip -4 addr | grep -oP '(?<=inet\s)\d+(\.\d+){3}'"
+alias flush="sudo systemd-resolve --flush-caches 2>/dev/null || sudo resolvectl flush-caches 2>/dev/null"
+{{- end }}
+
+# -------------------------------
+# Clipboard
+# -------------------------------
+{{- if eq .chezmoi.os "darwin" }}
+alias clip="tr -d '\n' | pbcopy"
+alias cpwd='pwd | pbcopy'
+alias pa='pbpaste'
+{{- else }}
+alias clip="tr -d '\n' | xclip -selection clipboard"
+alias cpwd='pwd | xclip -selection clipboard'
+alias pa='xclip -selection clipboard -o'
+{{- end }}
+
+# -------------------------------
+# File operations
+# -------------------------------
+alias cleanup="find . -name '*.DS_Store' -type f -ls -delete"
+{{- if eq .chezmoi.os "darwin" }}
+alias fs="stat -f '%z bytes'"
+alias emptytrash="rm -rfv ~/.Trash"
+{{- else }}
+alias fs="stat --printf='%s bytes\n'"
+alias emptytrash="rm -rfv ~/.local/share/Trash/*"
+{{- end }}
+
+# Archive listing
+ls-archive () {
+  if [ -z "$1" ]; then echo "No archive specified"; return; fi
+  if [[ ! -f $1 ]]; then echo "File not found"; return; fi
+  ext="${1##*.}"
+  case "$ext" in
+    zip) unzip -l "$1" ;;
+    rar) unrar l "$1" ;;
+    tar) tar tf "$1" ;;
+    gz|tgz) tar tzf "$1" ;;
+    *) echo "Unknown Archive Format" ;;
+  esac
+}
+alias lz='ls-archive'
+
+# mkdir helpers
+mkcd() { local dir="$*"; mkdir -p "$dir" && cd "$dir"; }
+mkcp() {
+  local dir="$2"; local tmp="$2"; tmp="${tmp: -1}"
+  [ "$tmp" != "/" ] && dir="$(dirname "$2")"
+  [ -d "$dir" ] || mkdir -p "$dir" && cp -r "$@"
+}
+mkmv() {
+  local dir="$2"; local tmp="$2"; tmp="${tmp: -1}"
+  [ "$tmp" != "/" ] && dir="$(dirname "$2")"
+  [ -d "$dir" ] || mkdir -p "$dir" && mv "$@"
+}
+
+# -------------------------------
+# Navigation
+# -------------------------------
+alias home='cd ~'
+alias cd..='cd ..'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+
+alias doc="cd ~/Documents"
+alias dl="cd ~/Downloads"
+alias dt="cd ~/Desktop"
+alias p="cd ~/Code"
+alias c="cd ~/.config"
+
+# -------------------------------
+# Search
+# -------------------------------
+alias f="find . | grep"
+alias hf="history | grep"
+(( $+commands[fd] )) || alias fd='find . -type d -name'
+
+# -------------------------------
+# History
+# -------------------------------
+alias h='history'
+alias h-search='fc -El 0 | grep'
+alias histrg='history -500 | rg'
+
+# fzf history widget
+if [[ ! "$terminfo[kcuu1]" ]]; then
+  bindkey '^R' fzf-history-widget
+fi
+fzf-history-widget() {
+  local selected_command=$(fc -rl 1 | fzf --height 40% --reverse --tac | sed -E 's/ *[0-9]+\*? +//')
+  LBUFFER="$selected_command"
+  zle redisplay
+}
+zle -N fzf-history-widget
+
+# -------------------------------
+# Permissions
+# -------------------------------
+alias mx='chmod a+x'
+alias 000='chmod -R 000'
+alias 644='chmod -R 644'
+alias 666='chmod -R 666'
+alias 755='chmod -R 755'
+alias 777='chmod -R 777'
+
+# -------------------------------
+# Disk usage
+# -------------------------------
+alias dud='du -d 1 -h'
+alias duf='du -sh *'
+
+# -------------------------------
+# Alias management
+# -------------------------------
+alias al='alias | less'
+alias as='alias | grep'
+alias ar='unalias'
+
+# -------------------------------
+# System monitoring
+# -------------------------------
+{{- if eq .chezmoi.os "darwin" }}
+# macOS uses different tools
+alias memhog='ps -eo pid,ppid,comm,%mem --sort=-%mem | head'
+alias cpuhog='ps -eo pid,ppid,comm,%cpu --sort=-%cpu | head'
+{{- else }}
+alias meminfo='free -m -l -t'
+alias memhog='ps -eo pid,ppid,cmd,%mem --sort=-%mem | head'
+alias cpuhog='ps -eo pid,ppid,cmd,%cpu --sort=-%cpu | head'
+alias cpuinfo='lscpu'
+alias distro='cat /etc/*-release'
+{{- end }}
+
+# -------------------------------
+# External services
+# -------------------------------
+alias weather='curl wttr.in'
+alias weather-short='curl "wttr.in?format=3"'
+alias cheat='curl cheat.sh/'
+alias joke='curl https://icanhazdadjoke.com'
+
+# -------------------------------
+# Misc
+# -------------------------------
+alias cls='clear;ls'
+alias plz="fc -l -1 | cut -d' ' -f2- | xargs sudo"
+alias when='date'
+alias whereami='pwd'
+
+# -------------------------------
+# macOS-specific
+# -------------------------------
+{{- if eq .chezmoi.os "darwin" }}
+# Finder
+alias show="defaults write com.apple.Finder AppleShowAllFiles -bool true && killall Finder"
+alias hide="defaults write com.apple.Finder AppleShowAllFiles -bool false && killall Finder"
+alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
+alias killfinder="killall Finder"
+alias killdock="killall Dock"
+alias killmenubar="killall SystemUIServer NotificationCenter"
+alias killos="killfinder && killdock && killmenubar"
+
+# Spotlight
+alias spotoff="sudo mdutil -a -i off"
+alias spoton="sudo mdutil -a -i on"
+
+# Screen saver / lock
+alias afk="open /System/Library/CoreServices/ScreenSaverEngine.app"
+alias logoff="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+
+# System updates
+alias sysup='sudo softwareupdate -i -a'
+alias upall='sysup && brewup && bunup'
+{{- else }}
+# Linux system updates vary by distro
+alias upall='brewup && bunup'
+{{- end }}
+
+# -------------------------------
+# Package managers
+# -------------------------------
+alias brewup='brew update && brew upgrade && brew cleanup'
+alias bunup='bun upgrade'
+
+# -------------------------------
+# Editors
+# -------------------------------
+alias v='nvim'
+
+# -------------------------------
+# AI CLI tools
+# -------------------------------
+alias cc="claude --dangerously-skip-permissions"
+alias cx="codex --dangerously-bypass-approvals-and-sandbox"
+alias oc="opencode"
+alias cc-start="claude --dangerously-skip-permissions"
+alias cc-continue="claude --dangerously-skip-permissions --continue"
