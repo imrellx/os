@@ -6,11 +6,13 @@
 .config/aerospace/
 .config/hyprspace/
 .config/zsh/
+.zshenv
 {{ end }}
 
 # Linux-only configs (exclude on macOS)
 {{ if ne .chezmoi.os "linux" }}
 .config/bash/
+.bashrc
 {{ end }}
 
 # Always ignore

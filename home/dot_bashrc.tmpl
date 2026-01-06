@@ -1,0 +1,6 @@
+# ABOUTME: Bootstrap file to redirect bash config to XDG location
+# ABOUTME: Linux only - sources config from ~/.config/bash/
+{{- if eq .chezmoi.os "linux" }}
+# Source the real .bashrc from XDG location
+[[ -s "$HOME/.config/bash/.bashrc" ]] && source "$HOME/.config/bash/.bashrc"
+{{- end }}

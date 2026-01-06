@@ -1,5 +1,9 @@
+# ABOUTME: Bootstrap file to redirect zsh config to XDG location
+# ABOUTME: macOS only - tells zsh to look in ~/.config/zsh/
+{{- if eq .chezmoi.os "darwin" }}
 # Set the Zsh dotfiles directory
 export ZDOTDIR="$HOME/.config/zsh"
 
 # Source the real .zshenv from the new location
 [[ -s "$ZDOTDIR/.zshenv" ]] && source "$ZDOTDIR/.zshenv"
+{{- end }}
