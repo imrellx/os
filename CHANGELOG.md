@@ -24,6 +24,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - Simplified neovim to single config (LazyVim only, removed nvim-astrovim, nvim-adibhanna, nvim-cpplain)
 - Primary browser changed from Arc to Chrome (Zen as backup)
 
+### Infrastructure
+- Installed and configured chezmoi (source: os/home/)
+- Migrated to chezmoi: zsh, starship, git, mise configs
+
 ---
 
 ## Format Guide
