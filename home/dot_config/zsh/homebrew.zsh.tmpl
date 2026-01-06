@@ -12,7 +12,15 @@ export HOMEBREW_EDITOR="open"
 export HOMEBREW_EDITOR="${EDITOR:-vim}"
 {{- end }}
 
-export HOMEBREW_BUNDLE_FILE="$HOME/.config/Brewfile"
+# Brewfile locations (in os repo inventory folder)
+export BREWFILE_DIR="$HOME/Code/personal/os/inventory"
+export BREWFILE_COMMON="$BREWFILE_DIR/Brewfile.common"
+{{- if eq .chezmoi.os "darwin" }}
+export BREWFILE_PLATFORM="$BREWFILE_DIR/Brewfile.darwin"
+{{- else }}
+export BREWFILE_PLATFORM="$BREWFILE_DIR/Brewfile.linux"
+{{- end }}
+
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_ENV_HINTS=1
 export HOMEBREW_DISPLAY_INSTALL_TIMES=1
@@ -31,25 +39,31 @@ function _pretty_header() {
 	print "$fg$bg $1 \e[0m"
 }
 
+function _brew_bundle_install() {
+	local brewfile="$1"
+	local name="$2"
+	if [[ ! -f "$brewfile" ]]; then
+		echo "⚠️  $name not found: $brewfile"
+		return 1
+	fi
+	if ! brew bundle check --file="$brewfile" --no-upgrade &> /dev/null; then
+		export HOMEBREW_COLOR=1
+		brew bundle install --file="$brewfile" --verbose --no-upgrade |
+			grep --invert-match --extended-regexp "^Using |^Skipping install of "
+	else
+		echo "✅ $name satisfied."
+	fi
+}
+
 function update() {
 	_pretty_header "brew update" "no-line-break"
 	brew update
 
-	_pretty_header "brew bundle install"
-	if ! brew bundle check --no-upgrade &> /dev/null; then
-		export HOMEBREW_COLOR=1
-		brew bundle install --verbose --no-upgrade |
-			grep --invert-match --extended-regexp "^Using |^Skipping install of "
-	else
-		echo "✅ Brewfile satisfied."
-	fi
+	_pretty_header "brew bundle install (common)"
+	_brew_bundle_install "$BREWFILE_COMMON" "Brewfile.common"
 
-	_pretty_header "brew bundle cleanup"
-	if ! brew bundle cleanup &> /dev/null; then
-		brew bundle cleanup --force --zap
-	else
-		echo "✅ No unused packages."
-	fi
+	_pretty_header "brew bundle install (platform)"
+	_brew_bundle_install "$BREWFILE_PLATFORM" "Brewfile.platform"
 
 	_pretty_header "brew upgrade"
 	if [[ -n $(brew outdated) ]]; then

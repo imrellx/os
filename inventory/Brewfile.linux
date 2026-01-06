@@ -1,0 +1,12 @@
+# ABOUTME: Linux-specific Homebrew packages
+# ABOUTME: Supplementary packages not available or better via Linuxbrew
+
+# Linux-specific formulae
+# Note: Most tools on Linux come from apt/flatpak first
+# Linuxbrew fills gaps where system packages are outdated or missing
+
+# Bash completion (Linux uses bash)
+# brew "bash-completion@2"
+
+# Add Linux-specific packages here as needed
+# For Omarchy, most tools come pre-installed via apt/flatpak

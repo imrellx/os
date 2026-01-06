@@ -1,0 +1,90 @@
+# ABOUTME: Cross-platform Homebrew packages (macOS and Linux)
+# ABOUTME: Core CLI tools, languages, and development utilities
+
+# Taps (cross-platform)
+tap "dopplerhq/cli"
+tap "obra/tap"
+tap "oven-sh/bun"
+tap "sst/tap"
+tap "steveyegge/beads"
+
+# Core CLI tools
+brew "asciinema"
+brew "ast-grep"
+brew "bat"
+brew "croc"
+brew "direnv"
+brew "eza"
+brew "fd"
+brew "ffmpeg"
+brew "fzf"
+brew "gh"
+brew "git"
+brew "git-absorb"
+brew "glow"
+brew "gnupg"
+brew "helix"
+brew "ipcalc"
+brew "jj"
+brew "just"
+brew "lazydocker"
+brew "lazygit"
+brew "lefthook"
+brew "llm"
+brew "mise"
+brew "mole"
+brew "mosh"
+brew "neovim"
+brew "ripgrep"
+brew "opencode"
+brew "pandoc"
+brew "pass"
+brew "pnpm"
+brew "pre-commit"
+brew "starship"
+brew "stow"
+brew "superfile"
+brew "tmux"
+brew "typos-cli"
+brew "typst"
+brew "unar"
+brew "uv"
+brew "wget"
+brew "yadm"
+brew "yarn"
+brew "yazi"
+brew "yt-dlp"
+brew "zellij"
+brew "zoxide"
+
+# Node (needed for some tooling)
+brew "node"
+
+# Language servers
+brew "gopls"
+brew "lua-language-server"
+brew "pyright"
+brew "rust-analyzer"
+brew "typescript-language-server"
+
+# Language tools
+brew "cmake"
+brew "graphviz"
+brew "luarocks"
+brew "python@3.12"
+
+# Custom taps (cross-platform)
+brew "dopplerhq/cli/doppler"
+brew "obra/tap/packnplay"
+brew "oven-sh/bun/bun"
+brew "steveyegge/beads/bd"
+
+# Cargo packages (installed via brew on both platforms)
+cargo "cargo-audit"
+cargo "deciduous"
+cargo "needle-cli"
+cargo "trippy"
+
+# Go packages
+go "cmd/go"
+go "cmd/gofmt"
