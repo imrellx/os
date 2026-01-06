@@ -28,19 +28,19 @@ eval "$(${BREW_PREFIX}/bin/brew shellenv)"
 # Install common packages
 if [[ -f "${INVENTORY_DIR}/Brewfile.common" ]]; then
     echo "Installing common packages..."
-    brew bundle --file="${INVENTORY_DIR}/Brewfile.common" --no-lock
+    brew bundle --file="${INVENTORY_DIR}/Brewfile.common" --no-upgrade
 fi
 
 # Install platform-specific packages
 {{- if eq .chezmoi.os "darwin" }}
 if [[ -f "${INVENTORY_DIR}/Brewfile.darwin" ]]; then
     echo "Installing macOS packages..."
-    brew bundle --file="${INVENTORY_DIR}/Brewfile.darwin" --no-lock
+    brew bundle --file="${INVENTORY_DIR}/Brewfile.darwin" --no-upgrade
 fi
 {{- else }}
 if [[ -f "${INVENTORY_DIR}/Brewfile.linux" ]]; then
     echo "Installing Linux packages..."
-    brew bundle --file="${INVENTORY_DIR}/Brewfile.linux" --no-lock
+    brew bundle --file="${INVENTORY_DIR}/Brewfile.linux" --no-upgrade
 fi
 {{- end }}
 
