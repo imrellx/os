@@ -35,23 +35,22 @@ Command center for managing Ivo's machines via chezmoi.
 
 ## Workflow
 
-### Every Change (mandatory)
-After ANY file modification in this repo:
-1. Update `CHANGELOG.md` under `[Unreleased]`
-2. Commit with descriptive message
-3. Push to origin
+1. Check tier, propose if yellow/red
+2. Make changes in repo
+3. Run `chezmoi apply` (or `chezmoi apply --dry-run` first) if `home/` changed
+4. Update inventory if system state changed
+5. Update `CHANGELOG.md` under `[Unreleased]`
+6. Commit with descriptive message
+7. Push to origin
 
 ### Depending on What Changed
 
 | Changed | Action |
 |---------|--------|
-| `home/**` | `chezmoi apply` to deploy (or `--dry-run` first) |
-| `inventory/Brewfile.*` | `brew bundle` via run_once script, or manual install |
+| `home/**` | `chezmoi apply` to deploy |
+| `inventory/Brewfile.*` | `brew bundle` or manual `brew install` |
 | New external config | `chezmoi add <file>` before editing |
 | Inventory/docs only | No deploy needed |
-
-### Autonomy Check
-Before making changes, check tier (Green/Yellow/Red above). Propose if yellow/red.
 
 ### Common Tasks
 

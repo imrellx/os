@@ -13,7 +13,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - Moved mole from Brewfile.common to Brewfile.darwin (macOS-only in Homebrew)
 
 ### Changed
-- CLAUDE.md: Expanded workflow section with mandatory post-change steps (changelog, commit, push)
+- CLAUDE.md: Restored original workflow steps, added push as step 7
 - CLAUDE.md: Added "Depending on What Changed" table for chezmoi/brew actions
 - CLAUDE.md: Added "Common Tasks" quick reference
 
