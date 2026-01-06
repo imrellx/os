@@ -12,6 +12,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 ### Fixed
 - Moved mole from Brewfile.common to Brewfile.darwin (macOS-only in Homebrew)
 
+### Changed
+- CLAUDE.md: Expanded workflow section with mandatory post-change steps (changelog, commit, push)
+- CLAUDE.md: Added "Depending on What Changed" table for chezmoi/brew actions
+- CLAUDE.md: Added "Common Tasks" quick reference
+
 ### Added
 - macOS defaults script with current non-default settings (`scripts/macos-defaults.sh`) [macOS]
 - Chezmoi run_once script for Homebrew package installation (`run_once_after_brew-bundle.sh.tmpl`)
