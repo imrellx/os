@@ -31,6 +31,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - Migrated to chezmoi: fonts (83 files), gh, wezterm, alacritty, borders, yazi, superfile, zellij
 - Added cross-platform templates for homebrew.zsh, aliases.zsh, ghostty, tmux, alacritty, wezterm
 - Added run_once script for platform-specific font installation
+- Added interactive profile selection (minimal/developer/full/custom) at `chezmoi init`
 - Created .chezmoiignore for platform-specific deployments
 - Added bash configs for Linux (aliases.bash, homebrew.bash, .bashrc)
 - Split Brewfile into common + darwin + linux overlays
