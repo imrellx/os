@@ -16,6 +16,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - CLAUDE.md: Restored original workflow steps, added push as step 7
 - CLAUDE.md: Added "Depending on What Changed" table for chezmoi/brew actions
 - CLAUDE.md: Added "Common Tasks" quick reference
+- CLAUDE.md: Restored "Autonomy Check" callout section
 
 ### Added
 - macOS defaults script with current non-default settings (`scripts/macos-defaults.sh`) [macOS]

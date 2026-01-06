@@ -52,6 +52,9 @@ Command center for managing Ivo's machines via chezmoi.
 | New external config | `chezmoi add <file>` before editing |
 | Inventory/docs only | No deploy needed |
 
+### Autonomy Check
+Before making changes, check tier (Green/Yellow/Red above). Propose if yellow/red.
+
 ### Common Tasks
 
 **Add a brew package:**
