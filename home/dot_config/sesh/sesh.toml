@@ -19,6 +19,16 @@ name = "family"
 path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/family"
 
 [[session]]
+name = "vault-obsidian"
+path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/vault-002"
+startup_command = "open 'obsidian://open?vault=vault-002'"
+
+[[session]]
+name = "family-obsidian"
+path = "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/family"
+startup_command = "open 'obsidian://open?vault=family'"
+
+[[session]]
 name = "os"
 path = "~/Code/personal/os"
 
