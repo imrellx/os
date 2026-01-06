@@ -300,6 +300,18 @@ alias cx="codex --dangerously-bypass-approvals-and-sandbox"
 alias oc="opencode"
 
 # -------------------------------
+# Network SSH with 1Password
+# -------------------------------
+# cssh - Cisco SSH with password from 1Password
+cssh() {
+    if ! command -v op &>/dev/null; then
+        echo "1Password CLI (op) not installed"
+        return 1
+    fi
+    sshpass -p "$(op read 'op://work/ivn-admin-n/password')" ssh "$@"
+}
+
+# -------------------------------
 # Terminal multiplexers
 # -------------------------------
 unalias ss 2>/dev/null
