@@ -161,5 +161,11 @@ vscode "yzhang.markdown-all-in-one"
 vscode "zhuangtongfa.material-theme"
 
 # Mac App Store
-mas "UTM", id: 1538878817
+mas "1Password for Safari", id: 1569813296
+mas "Simplenote", id: 692867256
+mas "Tailscale", id: 1475387142
 mas "Xcode", id: 497799835
+mas "obsidian-web-clipper", id: 6720708363
+mas "pl2303-serial", id: 1624835354
+mas "raycast-companion", id: 6738274497
+mas "zsa-keymapp", id: 6472865291
