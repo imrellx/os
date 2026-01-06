@@ -1,0 +1,68 @@
+# ABOUTME: Helix editor configuration
+# ABOUTME: Vim-like modal editor with LSP support and yazi integration
+theme = "jellybeans"
+
+[editor]
+line-number = "relative"
+mouse = false
+auto-completion = true
+auto-save = true
+auto-format = true
+text-width = 80
+gutters = ["diff", "diagnostics", "line-numbers", "spacer"]
+soft-wrap.enable = true
+soft-wrap.max-indent-retain = 80
+bufferline = "always"
+true-color = true
+color-modes = true
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.file-picker]
+hidden = false
+
+[editor.statusline]
+left = ["mode", "spinner", "file-modification-indicator", "read-only-indicator"]
+center = ["file-name"]
+right = [
+    "diagnostics",
+    "register",
+    "selections",
+    "position",
+    "file-encoding",
+    "file-line-ending",
+    "file-type",
+]
+separator = "│"
+mode.normal = "LOCKED"
+mode.insert = "WORKING"
+mode.select = "VISUAL SEL"
+
+[editor.lsp]
+enable = true
+auto-signature-help = true
+display-messages = true
+display-inlay-hints = true
+
+[editor.indent-guides]
+render = true
+character = "┊"
+skip-levels = 1
+
+
+[editor.inline-diagnostics]
+cursor-line = "warning"
+
+[keys.normal.space]
+# Only works in non-windows environments :(
+# Open current buffer in Yazi
+e = ":open %sh{~/.config/helix/yazi-picker.sh '%{buffer_name}'}"
+# Open pwd in Yazi
+E = ":open %sh{~/.config/helix/yazi-picker.sh}"
+q = ":quit"
+w = ":write"
+
+C-r = ":config-reload"
