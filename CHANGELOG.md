@@ -22,6 +22,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 ### Fixed
 - Linked unlinked `container` keg in Homebrew
 
+### Infrastructure
+- Published repo to GitHub (public): https://github.com/imrellx/os
+
 ## 2026-01-06
 
 ### Added
