@@ -1,6 +1,9 @@
 # ABOUTME: macOS-specific Homebrew packages
 # ABOUTME: Casks, Mac App Store apps, and macOS-only tools
 
+# Global cask options
+cask_args appdir: "/Applications"
+
 # macOS-specific taps
 tap "acsandmann/tap"
 tap "assimelha/tap"
@@ -38,50 +41,52 @@ brew "kristoferlund/ostt/ostt"
 brew "zippoxer/tap/recall"
 
 # Casks (macOS GUI applications)
-cask "1password-cli", args: { appdir: "/Applications" }
-# alacritty, arc, chromium removed (deprecated/unused)
-cask "claude", args: { appdir: "/Applications" }
+cask "1password"
+cask "1password-cli"
+cask "claude"
 cask "claude-code"
 cask "codex"
 cask "container"
 cask "cursor"
-cask "discord", args: { appdir: "/Applications" }
-cask "ghostty", args: { appdir: "/Applications" }
+cask "discord"
+cask "ghostty"
 cask "hyprspace"
-cask "iterm2", args: { appdir: "/Applications" }
-cask "karabiner-elements", args: { appdir: "/Applications" }
+cask "iterm2"
+cask "karabiner-elements"
+cask "keymapp"
 cask "kicad"
-cask "leader-key", args: { appdir: "/Applications" }
+cask "leader-key"
 cask "leash-app"
 cask "linear-linear"
-cask "localsend", args: { appdir: "~/Applications" }
-cask "macwhisper", args: { appdir: "/Applications" }
+cask "localsend"
+cask "macwhisper"
 cask "microsoft-auto-update"
-cask "microsoft-excel", args: { appdir: "~/Applications" }
-cask "microsoft-outlook", args: { appdir: "~/Applications" }
-cask "microsoft-teams", args: { appdir: "~/Applications" }
-cask "microsoft-word", args: { appdir: "~/Applications" }
+cask "microsoft-excel"
+cask "microsoft-outlook"
+cask "microsoft-teams"
+cask "microsoft-word"
 cask "notunes"
-cask "obsidian", args: { appdir: "/Applications" }
+cask "obsidian"
 cask "omniwm"
-cask "orbstack", args: { appdir: "/Applications" }
-cask "pearcleaner", args: { appdir: "/Applications" }
-# powershell, syntax-highlight removed (deprecated)
-cask "raycast", args: { appdir: "/Applications" }
+cask "orbstack"
+cask "pearcleaner"
+cask "raycast"
 cask "shottr"
-cask "telegram", args: { appdir: "/Applications" }
-cask "visual-studio-code", args: { appdir: "/Applications" }
-cask "vlc", args: { appdir: "/Applications" }
-cask "voiceink", args: { appdir: "/Applications" }
+cask "spotify"
+cask "telegram"
+cask "visual-studio-code"
+cask "vlc"
+cask "voiceink"
 cask "warp"
 cask "wezterm"
 cask "whatsapp"
-cask "zoom", args: { appdir: "/Applications" }
+cask "zed"
+cask "zoom"
 
 # Fonts
-cask "font-blex-mono-nerd-font", args: { appdir: "~/Applications" }
+cask "font-blex-mono-nerd-font"
 cask "font-ia-writer-mono"
-cask "font-symbols-only-nerd-font", args: { appdir: "~/Applications" }
+cask "font-symbols-only-nerd-font"
 
 # VSCode extensions (managed by Homebrew on macOS)
 vscode "aaron-bond.better-comments"

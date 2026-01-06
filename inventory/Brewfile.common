@@ -56,6 +56,10 @@ brew "yt-dlp"
 brew "zellij"
 brew "zoxide"
 
+# Data tools
+brew "jq"
+brew "sqlite"
+
 # Node (needed for some tooling)
 brew "node"
 

@@ -20,7 +20,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - CLAUDE.md: Added "Session Start" section with memory search and design doc read requirements
 
 ### Added
+- Brewfile.common: jq, sqlite
+- Brewfile.darwin: 1password (main app), keymapp, spotify, zed
+- Brewfile.darwin: global `cask_args appdir: "/Applications"`
 - Mac App Store section in Brewfile.darwin (1Password Safari, Simplenote, Tailscale, Xcode, obsidian-web-clipper, pl2303-serial, raycast-companion, zsa-keymapp)
+
+### Fixed
+- Brewfile.darwin: removed per-cask appdir overrides, using global default now
+- Brewfile.darwin: cleaned up inconsistent ~/Applications vs /Applications settings
+
+### Added (earlier)
 - macOS defaults script with current non-default settings (`scripts/macos-defaults.sh`) [macOS]
 - Chezmoi run_once script for Homebrew package installation (`run_once_after_brew-bundle.sh.tmpl`)
 - Zig to mise config
