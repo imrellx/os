@@ -4,6 +4,7 @@
 # macOS-only configs (exclude on Linux)
 {{ if ne .chezmoi.os "darwin" }}
 .config/aerospace/
+.config/hyprspace/
 {{ end }}
 
 # Linux-only configs (exclude on macOS)
