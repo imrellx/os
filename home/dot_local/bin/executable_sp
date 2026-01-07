@@ -2,103 +2,105 @@
 # ABOUTME: SSH host picker with fzf and tmux integration
 # ABOUTME: Standalone script for use in tmux popups
 
-ssh_config_dir="${SSH_CONFIG_DIR:-$HOME/.ssh/config.d}"
-hosts_cache="/tmp/sp-hosts-$$"
+# Debug mode: set SP_DEBUG=1 to see what's happening
+if [[ -n "$SP_DEBUG" ]]; then
+    exec 2>/tmp/sp-debug.log
+    set -x
+fi
 
-# Parse SSH configs
-parse_hosts() {
-    local current_host="" current_ip="" current_op=""
-    local line word
+SSH_CONFIG_DIR="${SSH_CONFIG_DIR:-$HOME/.ssh/config.d}"
+HOSTS_FILE="/tmp/sp-hosts-$$"
+DISPLAY_FILE="/tmp/sp-display-$$"
 
-    for file in "$ssh_config_dir"/*; do
-        [[ -f "$file" ]] || continue
-        [[ "$(basename "$file")" == "00-defaults" ]] && continue
-        [[ "$(basename "$file")" == "05-github" ]] && continue
-
-        while IFS= read -r line; do
-            [[ -z "$line" ]] && continue
-            [[ "$line" == \#* && "$line" != *"# OP:"* ]] && continue
-
-            if [[ "$line" == Host\ * ]]; then
-                if [[ -n "$current_host" && -n "$current_ip" ]]; then
-                    echo "${current_host}|${current_ip}|${current_op}"
-                fi
-                word="${line#Host }"
-                word="${word%% *}"
-                [[ "$word" == *\** ]] && continue
-                current_host="$word"
-                current_ip=""
-                current_op=""
-            elif [[ "$line" == *HostName\ * ]]; then
-                word="${line#*HostName }"
-                word="${word%% *}"
-                current_ip="$word"
-            elif [[ "$line" == *"# OP:"* ]]; then
-                word="${line#*# OP: }"
-                word="${word%% *}"
-                current_op="$word"
-            fi
-        done < "$file"
-
-        if [[ -n "$current_host" && -n "$current_ip" ]]; then
-            echo "${current_host}|${current_ip}|${current_op}"
-        fi
-        current_host="" current_ip="" current_op=""
-    done
+cleanup() {
+    [[ -z "$SP_DEBUG" ]] && rm -f "$HOSTS_FILE" "$DISPLAY_FILE"
 }
+trap cleanup EXIT
 
-# Get OP reference for a host
-get_op_ref() {
-    grep "^${1}|" "$hosts_cache" | cut -d'|' -f3
-}
-
-# Build tmux command
-tmux_cmd() {
-    local host="$1" op_ref="$2"
-    if [[ -n "$op_ref" ]]; then
-        echo "zsh -c 'sshpass -d 3 3< <(op read \"$op_ref\") ssh $host || read -k1 -s'"
-    else
-        echo "ssh $host || read -k1 -s"
-    fi
-}
-
-# Build cache
-parse_hosts > "$hosts_cache"
-
-# Format for display
-display_list=$(awk -F'|' '{print $1 " (" $2 ")"}' "$hosts_cache")
-
-if [[ -z "$display_list" ]]; then
-    echo "No SSH hosts found in $ssh_config_dir"
-    rm -f "$hosts_cache"
+# Verify config dir exists
+if [[ ! -d "$SSH_CONFIG_DIR" ]]; then
+    print "Error: SSH config directory not found: $SSH_CONFIG_DIR"
+    read -k1 -s
     exit 1
 fi
 
-# fzf picker
-fzf_result=$(echo "$display_list" | fzf \
-    --multi \
-    --height 100% \
-    --reverse \
-    --border rounded \
-    --border-label ' SSH Hosts ' \
-    --prompt '  ' \
-    --pointer '▶' \
-    --marker '✓' \
-    --query "${1:-}" \
-    --preview "host=\$(echo {} | cut -d' ' -f1); grep \"^Host \$host\$\" -A10 $ssh_config_dir/* 2>/dev/null | head -12" \
-    --preview-window 'right:40%:wrap' \
-    --header 'Enter: window | C-t: tiled | C-s: sync | Tab: select' \
-    --color 'header:italic:dim' \
-    --expect 'ctrl-t,ctrl-s' \
-)
+# Parse SSH configs into hosts file
+for file in "$SSH_CONFIG_DIR"/*; do
+    [[ -f "$file" ]] || continue
+    [[ "$(basename "$file")" == "00-defaults" ]] && continue
+    [[ "$(basename "$file")" == "05-github" ]] && continue
 
-[[ -z "$fzf_result" ]] && { rm -f "$hosts_cache"; exit 0; }
+    current_host=""
+    current_ip=""
+    current_op=""
+
+    while IFS= read -r line; do
+        [[ -z "$line" ]] && continue
+        [[ "$line" == \#* && "$line" != *"# OP:"* ]] && continue
+
+        if [[ "$line" == Host\ * ]]; then
+            if [[ -n "$current_host" && -n "$current_ip" ]]; then
+                print -r -- "${current_host}|${current_ip}|${current_op}" >> "$HOSTS_FILE"
+            fi
+            current_host="${line#Host }"
+            current_host="${current_host%% *}"
+            [[ "$current_host" == *\** ]] && { current_host=""; continue; }
+            current_ip=""
+            current_op=""
+        elif [[ "$line" == *HostName\ * ]]; then
+            current_ip="${line#*HostName }"
+            current_ip="${current_ip%% *}"
+        elif [[ "$line" == *"# OP:"* ]]; then
+            current_op="${line#*\# OP: }"
+            current_op="${current_op%% *}"
+        fi
+    done < "$file"
+
+    if [[ -n "$current_host" && -n "$current_ip" ]]; then
+        print -r -- "${current_host}|${current_ip}|${current_op}" >> "$HOSTS_FILE"
+    fi
+done
+
+# Check we have hosts
+if [[ ! -s "$HOSTS_FILE" ]]; then
+    print "No SSH hosts found in $SSH_CONFIG_DIR"
+    print "Files checked:"
+    ls -la "$SSH_CONFIG_DIR"
+    read -k1 -s
+    exit 1
+fi
+
+host_count=$(wc -l < "$HOSTS_FILE" | tr -d ' ')
+
+# Create display list
+while IFS='|' read -r host ip op; do
+    print -r -- "$host ($ip)"
+done < "$HOSTS_FILE" > "$DISPLAY_FILE"
+
+# Run fzf with explicit input
+fzf_result=$(/opt/homebrew/bin/fzf \
+    --multi \
+    --reverse \
+    --border=rounded \
+    --border-label=" SSH Hosts ($host_count) " \
+    --prompt='  ' \
+    --pointer='▶' \
+    --marker='✓' \
+    --query="${1:-}" \
+    --preview="h=\$(echo {} | cut -d' ' -f1); grep -h \"^Host \$h\$\" -A10 $SSH_CONFIG_DIR/* 2>/dev/null | head -12" \
+    --preview-window='right:40%:wrap' \
+    --header='Enter: window | C-t: tiled | C-s: sync | Tab: multi' \
+    --expect='ctrl-t,ctrl-s' \
+    < "$DISPLAY_FILE"
+) || exit 0
+
+[[ -z "$fzf_result" ]] && exit 0
 
 # Parse result
-key_pressed=$(echo "$fzf_result" | head -1)
-selected_hosts=$(echo "$fzf_result" | tail -n +2 | cut -d' ' -f1)
+key_pressed=$(print -r -- "$fzf_result" | head -1)
+selected_hosts=$(print -r -- "$fzf_result" | tail -n +2 | cut -d' ' -f1)
 
-[[ -z "$selected_hosts" ]] && { rm -f "$hosts_cache"; exit 0; }
+[[ -z "$selected_hosts" ]] && exit 0
 
 # Determine layout
 case "$key_pressed" in
@@ -107,41 +109,39 @@ case "$key_pressed" in
     *)      layout="window" ;;
 esac
 
-host_count=$(echo "$selected_hosts" | wc -l | tr -d ' ')
+sel_count=$(print -r -- "$selected_hosts" | wc -l | tr -d ' ')
+
+# Helper to get OP ref
+get_op() {
+    grep "^${1}|" "$HOSTS_FILE" | cut -d'|' -f3
+}
+
+# Helper to build command
+build_cmd() {
+    local h="$1" o="$2"
+    if [[ -n "$o" ]]; then
+        print -r -- "zsh -c 'sshpass -d 3 3< <(op read \"$o\") ssh $h || read -k1 -s'"
+    else
+        print -r -- "ssh $h || read -k1 -s"
+    fi
+}
 
 # Execute
-if [[ "$layout" == "window" && "$host_count" -eq 1 ]]; then
-    host=$(echo "$selected_hosts" | head -1)
-    op_ref=$(get_op_ref "$host")
-    cmd=$(tmux_cmd "$host" "$op_ref")
-    tmux new-window -n "$host" "$cmd"
-elif [[ "$layout" == "tiled" || "$layout" == "window" ]]; then
+if [[ "$layout" == "window" && "$sel_count" -eq 1 ]]; then
+    h=$(print -r -- "$selected_hosts" | head -1)
+    cmd=$(build_cmd "$h" "$(get_op "$h")")
+    tmux new-window -n "$h" "$cmd"
+else
     first=true
-    while IFS= read -r host; do
-        op_ref=$(get_op_ref "$host")
-        cmd=$(tmux_cmd "$host" "$op_ref")
+    print -r -- "$selected_hosts" | while IFS= read -r h; do
+        cmd=$(build_cmd "$h" "$(get_op "$h")")
         if $first; then
-            tmux new-window -n "ssh-multi" "$cmd"
+            tmux new-window -n "ssh-${layout}" "$cmd"
             first=false
         else
             tmux split-window "$cmd"
             tmux select-layout tiled
         fi
-    done <<< "$selected_hosts"
-elif [[ "$layout" == "sync" ]]; then
-    first=true
-    while IFS= read -r host; do
-        op_ref=$(get_op_ref "$host")
-        cmd=$(tmux_cmd "$host" "$op_ref")
-        if $first; then
-            tmux new-window -n "ssh-sync" "$cmd"
-            first=false
-        else
-            tmux split-window "$cmd"
-            tmux select-layout tiled
-        fi
-    done <<< "$selected_hosts"
-    tmux set-window-option synchronize-panes on
+    done
+    [[ "$layout" == "sync" ]] && tmux set-window-option synchronize-panes on
 fi
-
-rm -f "$hosts_cache"
