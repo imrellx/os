@@ -1,0 +1,58 @@
+# ABOUTME: Flexoki dark tmux theme - inky colors for prose and code
+# ABOUTME: From https://stephango.com/flexoki by Steph Ango
+
+# Base colors
+flexoki_black="#100f0f"
+flexoki_base_950="#1c1b1a"
+flexoki_base_900="#282726"
+flexoki_base_850="#343331"
+flexoki_base_800="#403e3c"
+flexoki_base_700="#575653"
+flexoki_base_600="#6f6e69"
+flexoki_base_500="#878580"
+flexoki_base_300="#b7b5ac"
+flexoki_base_200="#cecdc3"
+flexoki_base_150="#dad8ce"
+flexoki_base_100="#e6e4d9"
+flexoki_base_50="#f2f0e5"
+flexoki_paper="#fffcf0"
+
+# Primary colors
+flexoki_red="#af3029"
+flexoki_orange="#bc5215"
+flexoki_yellow="#ad8301"
+flexoki_green="#66800b"
+flexoki_cyan="#24837b"
+flexoki_blue="#205ea6"
+flexoki_purple="#5e409d"
+flexoki_magenta="#a02f6f"
+
+# Brighter variants
+flexoki_red_2="#d14d41"
+flexoki_orange_2="#da702c"
+flexoki_yellow_2="#d0a215"
+flexoki_green_2="#879a39"
+flexoki_cyan_2="#3aa99f"
+flexoki_blue_2="#4385be"
+flexoki_purple_2="#8b7ec8"
+flexoki_magenta_2="#ce5d97"
+
+# Semantic colors
+thm_bg=$flexoki_black
+thm_fg=$flexoki_base_200
+thm_black=$flexoki_black
+thm_red=$flexoki_red_2
+thm_green=$flexoki_green_2
+thm_yellow=$flexoki_yellow_2
+thm_blue=$flexoki_blue_2
+thm_magenta=$flexoki_purple_2
+thm_cyan=$flexoki_cyan_2
+thm_white=$flexoki_base_200
+thm_orange=$flexoki_orange_2
+
+# Status line colors
+thm_statusline_bg=$flexoki_base_950
+thm_statusline_fg=$flexoki_base_500
+thm_border=$flexoki_base_850
+thm_active_border=$flexoki_blue_2
+thm_highlight=$flexoki_base_800

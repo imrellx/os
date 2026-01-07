@@ -10,6 +10,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 ## [Unreleased]
 
 ### Added
+- tmux: themes directory with jellybeans, flexoki-dark, and jellybeans-flexoki palettes
 - Brewfile.common: sesh (smart tmux session manager with zoxide integration)
 - tmux: tmux-sessionx plugin (fuzzy session manager with preview, `C-a o`)
 - tmux: tmux-floax plugin (floating pane scratchpad, `C-a p`)
