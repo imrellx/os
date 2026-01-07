@@ -32,8 +32,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - Brewfile.common: sshpass (non-interactive SSH password authentication)
 - docs: `ssh-configuration.md` - comprehensive SSH setup documentation
 - docs: `plans/2026-01-07-ssh-picker-design.md` - SSH picker design with fzf/tmux
+- zsh: `sp` function - SSH picker with fzf, multi-select, tmux layouts (tiled/sync)
+- tmux: `C-a S` keybinding to launch SSH picker in popup
+- ssh: `# OP:` markers on 202 hosts for explicit password auth detection
 
 ### Changed
+- zsh: `cssh` now uses `sshpass -d` (file descriptor) - password no longer visible in `ps`
 - tmux: disabled continuum auto-restore (use `C-a C-r` to restore manually)
 
 ### Fixed

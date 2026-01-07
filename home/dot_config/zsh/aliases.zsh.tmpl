@@ -303,12 +303,205 @@ alias oc="opencode"
 # Network SSH with 1Password
 # -------------------------------
 # cssh - Cisco SSH with password from 1Password
+# Uses sshpass -d (file descriptor) so password doesn't appear in ps output
 cssh() {
     if ! command -v op &>/dev/null; then
-        echo "1Password CLI (op) not installed"
+        echo "Error: 1Password CLI (op) not installed"
         return 1
     fi
-    sshpass -p "$(op read 'op://work/ivn-admin-n/password')" ssh "$@"
+    if ! command -v sshpass &>/dev/null; then
+        echo "Error: sshpass not installed (brew install sshpass)"
+        return 1
+    fi
+    local op_ref="${CSSH_OP_REF:-op://work/ivn-admin-n/password}"
+    sshpass -d 3 3< <(op read "$op_ref") ssh "$@"
+}
+
+# sp - SSH picker with fzf and tmux integration
+# Usage: sp [search-term]
+# Keybindings in picker:
+#   Enter   = new tmux window
+#   Ctrl-t  = tiled panes (multi-select)
+#   Ctrl-s  = synchronized input (multi-select)
+#   Ctrl-p  = current pane
+#   Tab     = toggle multi-select
+sp() {
+    local ssh_config_dir="${SSH_CONFIG_DIR:-$HOME/.ssh/config.d}"
+    local hosts_cache="/tmp/sp-hosts-$$"
+    local layout="window"  # default
+
+    # Parse SSH configs: extract Host, HostName, and OP reference
+    # Format: hostname|ip|op_ref (op_ref empty if key auth)
+    _sp_parse_hosts() {
+        local current_host="" current_ip="" current_op=""
+
+        for file in "$ssh_config_dir"/*; do
+            [[ -f "$file" ]] || continue
+            [[ "$(basename "$file")" == "00-defaults" ]] && continue
+            [[ "$(basename "$file")" == "05-github" ]] && continue
+
+            while IFS= read -r line; do
+                if [[ "$line" =~ ^Host[[:space:]]+([^[:space:]*]+)$ ]]; then
+                    # Output previous host if complete
+                    if [[ -n "$current_host" && -n "$current_ip" ]]; then
+                        echo "${current_host}|${current_ip}|${current_op}"
+                    fi
+                    current_host="${match[1]:-${BASH_REMATCH[1]}}"
+                    current_ip=""
+                    current_op=""
+                elif [[ "$line" =~ ^[[:space:]]*HostName[[:space:]]+(.+)$ ]]; then
+                    current_ip="${match[1]:-${BASH_REMATCH[1]}}"
+                elif [[ "$line" =~ ^[[:space:]]*#[[:space:]]*OP:[[:space:]]*(.+)$ ]]; then
+                    current_op="${match[1]:-${BASH_REMATCH[1]}}"
+                fi
+            done < "$file"
+
+            # Output last host in file
+            if [[ -n "$current_host" && -n "$current_ip" ]]; then
+                echo "${current_host}|${current_ip}|${current_op}"
+            fi
+            current_host="" current_ip="" current_op=""
+        done
+    }
+
+    # Get OP reference for a host
+    _sp_get_op_ref() {
+        local host="$1"
+        grep "^${host}|" "$hosts_cache" | cut -d'|' -f3
+    }
+
+    # Connect to a single host
+    _sp_connect() {
+        local host="$1"
+        local op_ref="$(_sp_get_op_ref "$host")"
+
+        if [[ -n "$op_ref" ]]; then
+            # Password auth via 1Password
+            if ! command -v op &>/dev/null; then
+                echo "Error: 1Password CLI (op) not installed" >&2
+                return 1
+            fi
+            sshpass -d 3 3< <(op read "$op_ref") ssh "$host"
+        else
+            # Key auth
+            ssh "$host"
+        fi
+    }
+
+    # Build cache
+    _sp_parse_hosts > "$hosts_cache"
+
+    # Format for display: "hostname (ip)"
+    local display_list
+    display_list=$(awk -F'|' '{print $1 " (" $2 ")"}' "$hosts_cache")
+
+    if [[ -z "$display_list" ]]; then
+        echo "No SSH hosts found in $ssh_config_dir"
+        rm -f "$hosts_cache"
+        return 1
+    fi
+
+    # fzf picker with keybindings
+    # Using expect to capture which key was pressed
+    local fzf_result
+    fzf_result=$(echo "$display_list" | fzf \
+        --multi \
+        --height 70% \
+        --reverse \
+        --border rounded \
+        --border-label ' SSH Hosts ' \
+        --prompt '  ' \
+        --pointer '▶' \
+        --marker '✓' \
+        --query "${1:-}" \
+        --preview "host=\$(echo {} | cut -d' ' -f1); grep \"^Host \$host\$\" -A10 $ssh_config_dir/* 2>/dev/null | head -12" \
+        --preview-window 'right:40%:wrap' \
+        --header 'Enter: window | C-t: tiled | C-s: sync | C-p: pane | Tab: select' \
+        --color 'header:italic:dim' \
+        --expect 'ctrl-t,ctrl-s,ctrl-p' \
+    )
+
+    [[ -z "$fzf_result" ]] && { rm -f "$hosts_cache"; return 0; }
+
+    # Parse fzf output: first line is the key pressed, rest are selections
+    local key_pressed selected_hosts
+    key_pressed=$(echo "$fzf_result" | head -1)
+    selected_hosts=$(echo "$fzf_result" | tail -n +2 | cut -d' ' -f1)
+
+    [[ -z "$selected_hosts" ]] && { rm -f "$hosts_cache"; return 0; }
+
+    # Determine layout from key
+    case "$key_pressed" in
+        ctrl-t) layout="tiled" ;;
+        ctrl-s) layout="sync" ;;
+        ctrl-p) layout="pane" ;;
+        *)      layout="window" ;;
+    esac
+
+    # Count selections
+    local host_count
+    host_count=$(echo "$selected_hosts" | wc -l | tr -d ' ')
+
+    # Execute based on layout
+    if [[ "$layout" == "pane" ]]; then
+        # Single host in current pane
+        local host=$(echo "$selected_hosts" | head -1)
+        _sp_connect "$host"
+    elif [[ "$layout" == "window" && "$host_count" -eq 1 ]]; then
+        # Single host in new window
+        local host=$(echo "$selected_hosts" | head -1)
+        local op_ref="$(_sp_get_op_ref "$host")"
+        if [[ -n "$op_ref" ]]; then
+            tmux new-window -n "$host" "sshpass -d 3 3< <(op read '$op_ref') ssh $host; read -p 'Press Enter to close...'"
+        else
+            tmux new-window -n "$host" "ssh $host; read -p 'Press Enter to close...'"
+        fi
+    elif [[ "$layout" == "tiled" || "$layout" == "window" ]]; then
+        # Multiple hosts in tiled layout
+        local first=true
+        while IFS= read -r host; do
+            local op_ref="$(_sp_get_op_ref "$host")"
+            local cmd
+            if [[ -n "$op_ref" ]]; then
+                cmd="sshpass -d 3 3< <(op read '$op_ref') ssh $host; read -p 'Press Enter to close...'"
+            else
+                cmd="ssh $host; read -p 'Press Enter to close...'"
+            fi
+
+            if $first; then
+                tmux new-window -n "ssh-multi" "$cmd"
+                first=false
+            else
+                tmux split-window "$cmd"
+                tmux select-layout tiled
+            fi
+        done <<< "$selected_hosts"
+    elif [[ "$layout" == "sync" ]]; then
+        # Multiple hosts with synchronized input
+        local first=true
+        while IFS= read -r host; do
+            local op_ref="$(_sp_get_op_ref "$host")"
+            local cmd
+            if [[ -n "$op_ref" ]]; then
+                cmd="sshpass -d 3 3< <(op read '$op_ref') ssh $host; read -p 'Press Enter to close...'"
+            else
+                cmd="ssh $host; read -p 'Press Enter to close...'"
+            fi
+
+            if $first; then
+                tmux new-window -n "ssh-sync" "$cmd"
+                first=false
+            else
+                tmux split-window "$cmd"
+                tmux select-layout tiled
+            fi
+        done <<< "$selected_hosts"
+        # Enable synchronize-panes
+        tmux set-window-option synchronize-panes on
+        echo "Synchronized input enabled. Use 'C-a :set synchronize-panes off' to disable."
+    fi
+
+    rm -f "$hosts_cache"
 }
 
 # -------------------------------
