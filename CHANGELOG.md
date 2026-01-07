@@ -41,7 +41,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - tmux: `C-a L` cycles through pane layouts (simpler than separate horizontal/vertical keys)
 
 ### Changed
-- wezterm: switched color scheme from jellybeans-flexoki to flexoki-dark
+- wezterm: reverted to jellybeans-flexoki (flexoki-dark too intense)
 - tmux: status line now uses ANSI colors instead of hex - follows terminal theme
 - zsh: `cssh` now uses `sshpass -d` (file descriptor) - password no longer visible in `ps`
 - tmux: disabled continuum auto-restore (use `C-a C-r` to restore manually)
