@@ -44,6 +44,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - zsh: `sshc` alias for explicit colored SSH, `sshn` for no-color SSH
 - sp: automatic ChromaTerm integration when `ct` command available
 - cssh: automatic ChromaTerm integration when `ct` command available
+- tmux: Alt+arrows for pane switching without prefix
+- tmux: Shift+arrows for window switching without prefix
+- tmux: Alt+H/L for window switching without prefix
+- tmux: tmux-yank plugin for improved clipboard support
+- tmux: vi copy-mode keybindings (`v` select, `C-v` rectangle, `y` copy)
 
 ### Changed
 - wezterm: reverted to jellybeans-flexoki (flexoki-dark too intense)
