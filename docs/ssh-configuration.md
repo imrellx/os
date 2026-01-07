@@ -91,12 +91,12 @@ Host github.com
 
 ```ssh-config
 Host ssh-srv ssh-ma5
-    HostName 10.44.164.20
-    User withers
+    HostName 10.x.x.x
+    User your-user
 
 Host ssh-ld5
-    HostName 10.44.140.62
-    User withers
+    HostName 10.x.x.x
+    User your-user
 ```
 
 These are bastion/jump hosts used to reach internal network devices.
@@ -104,9 +104,9 @@ These are bastion/jump hosts used to reach internal network devices.
 ### ProxyJump Hosts (`37-work-via-jump`)
 
 ```ssh-config
-Host eu-int-rt01
-    HostName 185.137.8.251
-    User ivn-admin
+Host example-device
+    HostName 10.x.x.x
+    User admin-user
     ProxyJump ssh-srv
 ```
 
@@ -154,7 +154,7 @@ cssh() {
         echo "1Password CLI (op) not installed"
         return 1
     fi
-    sshpass -p "$(op read 'op://work/ivn-admin-n/password')" ssh "$@"
+    sshpass -p "$(op read 'op://vault/item/password')" ssh "$@"
 }
 ```
 
@@ -167,9 +167,9 @@ cssh() {
 ### 1Password Item Reference
 
 ```
-op://work/ivn-admin-n/password
-     │     │           │
-     │     │           └── Field name
+op://vault/item/password
+     │     │    │
+     │     │    └── Field name
      │     └── Item name in 1Password
      └── Vault name
 ```
@@ -185,7 +185,7 @@ cssh() {
         echo "1Password CLI (op) not installed"
         return 1
     fi
-    sshpass -d 3 3< <(op read 'op://work/ivn-admin-n/password') ssh "$@"
+    sshpass -d 3 3< <(op read 'op://vault/item/password') ssh "$@"
 }
 ```
 
@@ -248,10 +248,10 @@ op vault list
 op item list --vault work
 
 # Read a specific field
-op read 'op://work/ivn-admin-n/password'
+op read 'op://vault/item/password'
 
 # Get full item as JSON
-op item get 'ivn-admin-n' --vault work --format json
+op item get 'item-name' --vault vault-name --format json
 ```
 
 ## Source of Truth

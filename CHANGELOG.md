@@ -41,6 +41,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - tmux: disabled continuum auto-restore (use `C-a C-r` to restore manually)
 - sp: improved fzf input handling for tmux popup compatibility (uses `--bind start:reload`)
 
+### Security
+- Moved sensitive SSH host configs (10-home through 37-*) to private `os-private` repository
+- Configured chezmoi externals to pull from private repo on `chezmoi apply`
+- Sanitized documentation examples (replaced real IPs with 10.x.x.x placeholders)
+- Purged sensitive files from git history using BFG
+
 ### Fixed
 - Moved mole from Brewfile.common to Brewfile.darwin (macOS-only in Homebrew)
 

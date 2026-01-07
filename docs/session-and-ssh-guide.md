@@ -168,7 +168,7 @@ CSSH_OP_REF="op://vault/item/field" cssh <host>  # Custom credential
 
 ### Default Credential
 
-`op://work/ivn-admin-n/password`
+`op://vault/item/password`
 
 Override with `CSSH_OP_REF` environment variable.
 
@@ -194,9 +194,9 @@ Modular SSH config in `~/.ssh/config.d/`:
 Hosts with password authentication have this marker:
 ```
 Host example
-    HostName 10.1.2.3
+    HostName 10.x.x.x
     User admin
-    # OP: op://work/admin-n/password
+    # OP: op://vault/item/password
 ```
 
 The `sp` picker reads these markers to automatically use `cssh` (sshpass) for connection.
