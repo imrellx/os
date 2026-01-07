@@ -304,7 +304,6 @@ alias oc="opencode"
 # -------------------------------
 # cssh - Cisco SSH with password from 1Password
 # Uses sshpass -d (file descriptor) so password doesn't appear in ps output
-# Note: Can't use ct wrapper here - sshpass fd doesn't pass through ct
 cssh() {
     if ! command -v op &>/dev/null; then
         echo "Error: 1Password CLI (op) not installed"
@@ -315,7 +314,12 @@ cssh() {
         return 1
     fi
     local op_ref="${CSSH_OP_REF:-op://work/ivn-admin-n/password}"
-    sshpass -d 3 3< <(op read "$op_ref") ssh "$@"
+    # Wrap entire sshpass with ct for syntax highlighting
+    if command -v ct &>/dev/null; then
+        ct sshpass -d 3 3< <(op read "$op_ref") ssh "$@"
+    else
+        sshpass -d 3 3< <(op read "$op_ref") ssh "$@"
+    fi
 }
 
 # SSH with explicit ChromaTerm control
@@ -397,19 +401,19 @@ sp() {
     _sp_connect() {
         local host="$1"
         local op_ref="$(_sp_get_op_ref "$host")"
+        local ct_prefix=""
+        command -v ct &>/dev/null && ct_prefix="ct "
 
         if [[ -n "$op_ref" ]]; then
-            # Password auth via 1Password (can't use ct - sshpass fd issue)
+            # Password auth via 1Password
             if ! command -v op &>/dev/null; then
                 echo "Error: 1Password CLI (op) not installed" >&2
                 return 1
             fi
-            sshpass -d 3 3< <(op read "$op_ref") ssh "$host"
+            eval "${ct_prefix}sshpass -d 3 3< <(op read \"$op_ref\") ssh \"$host\""
         else
-            # Key auth: use ct wrapper if available
-            local ssh_cmd="ssh"
-            command -v ct &>/dev/null && ssh_cmd="ct ssh"
-            $ssh_cmd "$host"
+            # Key auth
+            eval "${ct_prefix}ssh \"$host\""
         fi
     }
 
@@ -470,15 +474,15 @@ sp() {
     # Helper to build tmux command (wraps in zsh for process substitution)
     _sp_tmux_cmd() {
         local host="$1" op_ref="$2"
+        local ct_prefix=""
+        command -v ct &>/dev/null && ct_prefix="ct "
 
         if [[ -n "$op_ref" ]]; then
-            # Password auth: can't use ct (sshpass fd doesn't pass through)
-            echo "zsh -c 'sshpass -d 3 3< <(op read \"$op_ref\") ssh $host || read -k1 -s'"
+            # Password auth: wrap entire sshpass with ct
+            echo "zsh -c '${ct_prefix}sshpass -d 3 3< <(op read \"$op_ref\") ssh $host || read -k1 -s'"
         else
-            # Key auth: use ct wrapper if available
-            local ssh_cmd="ssh"
-            command -v ct &>/dev/null && ssh_cmd="ct ssh"
-            echo "$ssh_cmd $host || read -k1 -s"
+            # Key auth
+            echo "${ct_prefix}ssh $host || read -k1 -s"
         fi
     }
 
