@@ -1,9 +1,0 @@
-# ABOUTME: GitHub SSH config - uses local key, not 1Password agent
-# ABOUTME: Needed for background git operations (Obsidian vault sync)
-
-Host github.com
-    HostName github.com
-    User git
-    IdentityAgent none
-    IdentityFile ~/.ssh/id_rsa
-    IdentitiesOnly yes
