@@ -458,6 +458,17 @@ sp() {
     local host_count
     host_count=$(echo "$selected_hosts" | wc -l | tr -d ' ')
 
+    # Helper to build tmux command (wraps in zsh for process substitution)
+    _sp_tmux_cmd() {
+        local host="$1" op_ref="$2"
+        if [[ -n "$op_ref" ]]; then
+            # Use zsh -c for process substitution support
+            echo "zsh -c 'sshpass -d 3 3< <(op read \"$op_ref\") ssh $host || read -k1 -s'"
+        else
+            echo "ssh $host || read -k1 -s"
+        fi
+    }
+
     # Execute based on layout
     if [[ "$layout" == "pane" ]]; then
         # Single host in current pane
@@ -467,22 +478,14 @@ sp() {
         # Single host in new window
         local host=$(echo "$selected_hosts" | head -1)
         local op_ref="$(_sp_get_op_ref "$host")"
-        if [[ -n "$op_ref" ]]; then
-            tmux new-window -n "$host" "sshpass -d 3 3< <(op read '$op_ref') ssh $host; read -p 'Press Enter to close...'"
-        else
-            tmux new-window -n "$host" "ssh $host; read -p 'Press Enter to close...'"
-        fi
+        local cmd="$(_sp_tmux_cmd "$host" "$op_ref")"
+        tmux new-window -n "$host" "$cmd"
     elif [[ "$layout" == "tiled" || "$layout" == "window" ]]; then
         # Multiple hosts in tiled layout
         local first=true
         while IFS= read -r host; do
             local op_ref="$(_sp_get_op_ref "$host")"
-            local cmd
-            if [[ -n "$op_ref" ]]; then
-                cmd="sshpass -d 3 3< <(op read '$op_ref') ssh $host; read -p 'Press Enter to close...'"
-            else
-                cmd="ssh $host; read -p 'Press Enter to close...'"
-            fi
+            local cmd="$(_sp_tmux_cmd "$host" "$op_ref")"
 
             if $first; then
                 tmux new-window -n "ssh-multi" "$cmd"
@@ -497,12 +500,7 @@ sp() {
         local first=true
         while IFS= read -r host; do
             local op_ref="$(_sp_get_op_ref "$host")"
-            local cmd
-            if [[ -n "$op_ref" ]]; then
-                cmd="sshpass -d 3 3< <(op read '$op_ref') ssh $host; read -p 'Press Enter to close...'"
-            else
-                cmd="ssh $host; read -p 'Press Enter to close...'"
-            fi
+            local cmd="$(_sp_tmux_cmd "$host" "$op_ref")"
 
             if $first; then
                 tmux new-window -n "ssh-sync" "$cmd"
