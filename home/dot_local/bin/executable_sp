@@ -77,8 +77,22 @@ while IFS='|' read -r host ip op; do
     print -r -- "$host ($ip)"
 done < "$HOSTS_FILE" > "$DISPLAY_FILE"
 
-# Run fzf with explicit input
-fzf_result=$(/opt/homebrew/bin/fzf \
+# Verify display file has content
+if [[ ! -s "$DISPLAY_FILE" ]]; then
+    print "Error: Display file empty. Hosts file had $host_count entries."
+    print "HOSTS_FILE content:"
+    head -5 "$HOSTS_FILE"
+    read -k1 -s
+    exit 1
+fi
+
+# Clear fzf environment to prevent fallback to file finder
+unset FZF_DEFAULT_COMMAND FZF_DEFAULT_OPTS
+
+# Use fzf's --bind start:reload to load data without relying on stdin
+# This works around tmux popup's tty stdin that breaks here-strings
+FZF_RESULT_FILE="/tmp/sp-fzf-result-$$"
+/opt/homebrew/bin/fzf \
     --multi \
     --reverse \
     --border=rounded \
@@ -91,8 +105,11 @@ fzf_result=$(/opt/homebrew/bin/fzf \
     --preview-window='right:40%:wrap' \
     --header='Enter: window | C-t: tiled | C-s: sync | Tab: multi' \
     --expect='ctrl-t,ctrl-s' \
-    < "$DISPLAY_FILE"
-) || exit 0
+    --bind "start:reload(cat $DISPLAY_FILE)" \
+    > "$FZF_RESULT_FILE" || { rm -f "$FZF_RESULT_FILE"; exit 0; }
+
+fzf_result=$(<"$FZF_RESULT_FILE")
+rm -f "$FZF_RESULT_FILE"
 
 [[ -z "$fzf_result" ]] && exit 0
 

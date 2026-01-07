@@ -39,6 +39,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 ### Changed
 - zsh: `cssh` now uses `sshpass -d` (file descriptor) - password no longer visible in `ps`
 - tmux: disabled continuum auto-restore (use `C-a C-r` to restore manually)
+- sp: improved fzf input handling for tmux popup compatibility (uses `--bind start:reload`)
 
 ### Fixed
 - Moved mole from Brewfile.common to Brewfile.darwin (macOS-only in Homebrew)
