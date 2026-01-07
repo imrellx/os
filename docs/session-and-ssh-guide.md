@@ -256,8 +256,7 @@ GitHub is excluded (in `05-github`) to allow Obsidian background sync without pr
 ├─────────────────────────────────────────────────────────┤
 │  PANE LAYOUTS (rearrange after opening)                  │
 ├─────────────────────────────────────────────────────────┤
-│  C-a _           → Even horizontal (side by side)       │
-│  C-a =           → Even vertical (stacked)              │
+│  C-a L           → Cycle layouts (keep pressing)        │
 └─────────────────────────────────────────────────────────┘
 ```
 

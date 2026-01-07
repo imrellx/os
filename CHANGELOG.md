@@ -36,7 +36,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - tmux: `C-a S` keybinding to launch SSH picker in popup
 - ssh: `# OP:` markers on 202 hosts for explicit password auth detection
 - sp: `C-p` keybinding - single host adds pane to current window, multiple hosts create new window
-- tmux: `C-a _` for horizontal layout, `C-a =` for vertical layout (avoids Aerospace conflict)
+- tmux: `C-a L` cycles through pane layouts (simpler than separate horizontal/vertical keys)
 
 ### Changed
 - zsh: `cssh` now uses `sshpass -d` (file descriptor) - password no longer visible in `ps`
