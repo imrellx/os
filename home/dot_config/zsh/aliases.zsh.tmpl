@@ -334,6 +334,7 @@ sp() {
     # Format: hostname|ip|op_ref (op_ref empty if key auth)
     _sp_parse_hosts() {
         local current_host="" current_ip="" current_op=""
+        local line word
 
         for file in "$ssh_config_dir"/*; do
             [[ -f "$file" ]] || continue
@@ -341,18 +342,33 @@ sp() {
             [[ "$(basename "$file")" == "05-github" ]] && continue
 
             while IFS= read -r line; do
-                if [[ "$line" =~ ^Host[[:space:]]+([^[:space:]*]+)$ ]]; then
+                # Skip empty lines and comments (except # OP:)
+                [[ -z "$line" ]] && continue
+                [[ "$line" == \#* && "$line" != *"# OP:"* ]] && continue
+
+                # Parse Host line
+                if [[ "$line" == Host\ * ]]; then
                     # Output previous host if complete
                     if [[ -n "$current_host" && -n "$current_ip" ]]; then
                         echo "${current_host}|${current_ip}|${current_op}"
                     fi
-                    current_host="${match[1]:-${BASH_REMATCH[1]}}"
+                    # Extract hostname (second word, skip wildcards)
+                    word="${line#Host }"
+                    word="${word%% *}"
+                    [[ "$word" == *\** ]] && continue
+                    current_host="$word"
                     current_ip=""
                     current_op=""
-                elif [[ "$line" =~ ^[[:space:]]*HostName[[:space:]]+(.+)$ ]]; then
-                    current_ip="${match[1]:-${BASH_REMATCH[1]}}"
-                elif [[ "$line" =~ ^[[:space:]]*#[[:space:]]*OP:[[:space:]]*(.+)$ ]]; then
-                    current_op="${match[1]:-${BASH_REMATCH[1]}}"
+                # Parse HostName line
+                elif [[ "$line" == *HostName\ * ]]; then
+                    word="${line#*HostName }"
+                    word="${word%% *}"
+                    current_ip="$word"
+                # Parse # OP: line
+                elif [[ "$line" == *"# OP:"* ]]; then
+                    word="${line#*# OP: }"
+                    word="${word%% *}"
+                    current_op="$word"
                 fi
             done < "$file"
 
