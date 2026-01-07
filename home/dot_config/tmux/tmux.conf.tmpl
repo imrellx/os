@@ -132,6 +132,20 @@ bind -n C-l if-shell "$is_vim" "send-keys C-l" "select-pane -R"
 bind -r n next-window
 bind -r p previous-window
 
+# Alt-arrow keys without prefix to switch panes
+bind -n M-Left select-pane -L
+bind -n M-Right select-pane -R
+bind -n M-Up select-pane -U
+bind -n M-Down select-pane -D
+
+# Shift-arrow to switch windows
+bind -n S-Left previous-window
+bind -n S-Right next-window
+
+# Alt-H/L to switch windows
+bind -n M-H previous-window
+bind -n M-L next-window
+
 # resize panes more easily
 bind H resize-pane -L 5
 bind L resize-pane -R 5
@@ -166,6 +180,11 @@ bind-key y run -b "tmux show-buffer | pbcopy"\; display-message "copied tmux buf
 {{- else }}
 bind-key y run -b "tmux show-buffer | xclip -selection clipboard"\; display-message "copied tmux buffer to system clipboard"
 {{- end }}
+
+# vi copy-mode keybindings
+bind-key -T copy-mode-vi v send-keys -X begin-selection
+bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
+bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
 
 # open lazygit in a new window with prefix+g
 bind-key g new-window -n lazygit -c "#{pane_current_path}" "lazygit"
@@ -219,6 +238,7 @@ bind-key C-j run-shell "tmux set-option -g status-position bottom;"
 
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-yank'
 set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'tmux-plugins/tmux-continuum'
 set -g @plugin 'christoomey/vim-tmux-navigator'
