@@ -3,6 +3,6 @@
 
 [".ssh/config.d"]
 type = "git-repo"
-url = "https://github.com/imrellx/os-private.git"
+url = "git@github.com:imrellx/os-private.git"
 refreshPeriod = "168h"
 clone.args = ["--depth", "1"]
