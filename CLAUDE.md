@@ -5,6 +5,28 @@
 
 Command center for managing Ivo's machines. Claude is the executing agent for ALL OS-level tasks.
 
+## Repository Structure
+
+This project spans TWO repositories:
+
+| Repo | Visibility | Contents |
+|------|------------|----------|
+| `imrellx/os` | **Public** | All configs, scripts, docs, Brewfiles |
+| `imrellx/os-private` | **Private** | SSH host configs (`~/.ssh/config.d/*`) |
+
+**How it works:** The public repo contains `.chezmoiexternal.toml` which tells chezmoi to clone `os-private` into `~/.ssh/config.d/` during `chezmoi apply`. This keeps 200+ SSH hosts with internal IPs out of the public repo.
+
+**On new machine setup:**
+```bash
+chezmoi init imrellx/os    # Clones public repo
+chezmoi apply              # Also clones os-private via SSH
+```
+
+**SSH config files in private repo:**
+- `00-defaults` - 1Password agent, keep-alive settings
+- `05-github` - GitHub exclusion from 1Password (for Obsidian sync)
+- `10-home` through `37-work-via-jump` - All host definitions
+
 ## Session Start
 
 Before doing anything:

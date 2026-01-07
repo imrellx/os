@@ -43,9 +43,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ### Security
 - Moved sensitive SSH host configs (10-home through 37-*) to private `os-private` repository
-- Configured chezmoi externals to pull from private repo on `chezmoi apply`
+- Configured chezmoi externals (`.chezmoiexternal.toml`) to pull SSH configs via SSH URL
+- All 12 `config.d/` files now live in private repo (including non-sensitive 00-defaults, 05-github)
 - Sanitized documentation examples (replaced real IPs with 10.x.x.x placeholders)
-- Purged sensitive files from git history using BFG
+- Purged sensitive files from git history using BFG (70 commits cleaned)
 
 ### Fixed
 - Moved mole from Brewfile.common to Brewfile.darwin (macOS-only in Homebrew)
