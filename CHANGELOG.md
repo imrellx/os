@@ -11,6 +11,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ### Added
 - tmux: jellybeans-tmux theme plugin (fork of tokyo-night-tmux with jellybeans-flexoki colors)
+- tmux: jellybeans-tmux powerline separators (pill-shaped status elements with `` and ``)
 - tmux: themes directory with jellybeans, flexoki-dark, and jellybeans-flexoki palettes
 - Brewfile.common: sesh (smart tmux session manager with zoxide integration)
 - tmux: tmux-sessionx plugin (fuzzy session manager with preview, `C-a o`)
