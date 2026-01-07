@@ -304,6 +304,7 @@ alias oc="opencode"
 # -------------------------------
 # cssh - Cisco SSH with password from 1Password
 # Uses sshpass -d (file descriptor) so password doesn't appear in ps output
+# Note: Can't use ct wrapper here - sshpass fd doesn't pass through ct
 cssh() {
     if ! command -v op &>/dev/null; then
         echo "Error: 1Password CLI (op) not installed"
@@ -314,10 +315,7 @@ cssh() {
         return 1
     fi
     local op_ref="${CSSH_OP_REF:-op://work/ivn-admin-n/password}"
-    # Use ct (chromaterm) wrapper if available for syntax highlighting
-    local ssh_cmd="ssh"
-    command -v ct &>/dev/null && ssh_cmd="ct ssh"
-    sshpass -d 3 3< <(op read "$op_ref") $ssh_cmd "$@"
+    sshpass -d 3 3< <(op read "$op_ref") ssh "$@"
 }
 
 # SSH with explicit ChromaTerm control
@@ -399,19 +397,18 @@ sp() {
     _sp_connect() {
         local host="$1"
         local op_ref="$(_sp_get_op_ref "$host")"
-        # Use ct (chromaterm) wrapper if available for syntax highlighting
-        local ssh_cmd="ssh"
-        command -v ct &>/dev/null && ssh_cmd="ct ssh"
 
         if [[ -n "$op_ref" ]]; then
-            # Password auth via 1Password
+            # Password auth via 1Password (can't use ct - sshpass fd issue)
             if ! command -v op &>/dev/null; then
                 echo "Error: 1Password CLI (op) not installed" >&2
                 return 1
             fi
-            sshpass -d 3 3< <(op read "$op_ref") $ssh_cmd "$host"
+            sshpass -d 3 3< <(op read "$op_ref") ssh "$host"
         else
-            # Key auth
+            # Key auth: use ct wrapper if available
+            local ssh_cmd="ssh"
+            command -v ct &>/dev/null && ssh_cmd="ct ssh"
             $ssh_cmd "$host"
         fi
     }
@@ -473,14 +470,14 @@ sp() {
     # Helper to build tmux command (wraps in zsh for process substitution)
     _sp_tmux_cmd() {
         local host="$1" op_ref="$2"
-        # Use ct (chromaterm) wrapper if available for syntax highlighting
-        local ssh_cmd="ssh"
-        command -v ct &>/dev/null && ssh_cmd="ct ssh"
 
         if [[ -n "$op_ref" ]]; then
-            # Use zsh -c for process substitution support
-            echo "zsh -c 'sshpass -d 3 3< <(op read \"$op_ref\") $ssh_cmd $host || read -k1 -s'"
+            # Password auth: can't use ct (sshpass fd doesn't pass through)
+            echo "zsh -c 'sshpass -d 3 3< <(op read \"$op_ref\") ssh $host || read -k1 -s'"
         else
+            # Key auth: use ct wrapper if available
+            local ssh_cmd="ssh"
+            command -v ct &>/dev/null && ssh_cmd="ct ssh"
             echo "$ssh_cmd $host || read -k1 -s"
         fi
     }

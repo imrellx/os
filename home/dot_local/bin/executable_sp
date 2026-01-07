@@ -137,13 +137,14 @@ get_op() {
 # Helper to build command
 build_cmd() {
     local h="$1" o="$2"
-    # Use ct (chromaterm) wrapper if available for syntax highlighting
-    local ssh_cmd="ssh"
-    command -v ct &>/dev/null && ssh_cmd="ct ssh"
 
     if [[ -n "$o" ]]; then
-        print -r -- "zsh -c 'sshpass -d 3 3< <(op read \"$o\") $ssh_cmd $h || read -k1 -s'"
+        # Password auth: can't use ct wrapper (sshpass fd doesn't pass through)
+        print -r -- "zsh -c 'sshpass -d 3 3< <(op read \"$o\") ssh $h || read -k1 -s'"
     else
+        # Key auth: use ct wrapper if available for syntax highlighting
+        local ssh_cmd="ssh"
+        command -v ct &>/dev/null && ssh_cmd="ct ssh"
         print -r -- "$ssh_cmd $h || read -k1 -s"
     fi
 }
