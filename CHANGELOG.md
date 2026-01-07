@@ -30,6 +30,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - ssh: 1Password SSH Agent integration (`~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock`)
 - zsh: `cssh` function for Cisco SSH with auto-password from 1Password CLI
 - Brewfile.common: sshpass (non-interactive SSH password authentication)
+- docs: `ssh-configuration.md` - comprehensive SSH setup documentation
+- docs: `plans/2026-01-07-ssh-picker-design.md` - SSH picker design with fzf/tmux
 
 ### Changed
 - tmux: disabled continuum auto-restore (use `C-a C-r` to restore manually)
