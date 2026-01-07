@@ -209,6 +209,10 @@ bind C-f display-popup -E "\
 # SSH host picker (sp script)
 bind S display-popup -E -w 80% -h 70% "~/.local/bin/sp"
 
+# Pane layout shortcuts (avoiding M-* which conflicts with Aerospace)
+bind _ select-layout even-horizontal  # Side by side
+bind = select-layout even-vertical    # Stacked
+
 # Move tmux status bar to top
 bind-key C-k run-shell "tmux set-option -g status-position top;"
 # Move tmux status bar to bottom

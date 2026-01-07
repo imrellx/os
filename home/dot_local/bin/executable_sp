@@ -153,12 +153,23 @@ else
 fi
 
 # Execute based on layout
-if [[ "$layout" == "pane" ]]; then
-    # Add to current window as pane(s)
+if [[ "$layout" == "pane" && "$sel_count" -eq 1 ]]; then
+    # Single host: add to current window as pane
+    cmd=$(build_cmd "$first_host" "$(get_op "$first_host")")
+    tmux split-window "$cmd"
+    tmux select-layout tiled
+elif [[ "$layout" == "pane" && "$sel_count" -gt 1 ]]; then
+    # Multiple hosts with C-p: new window with just those hosts
+    first=true
     print -r -- "$selected_hosts" | while IFS= read -r h; do
         cmd=$(build_cmd "$h" "$(get_op "$h")")
-        tmux split-window "$cmd"
-        tmux select-layout tiled
+        if $first; then
+            tmux new-window -n "$win_name" "$cmd"
+            first=false
+        else
+            tmux split-window "$cmd"
+            tmux select-layout tiled
+        fi
     done
 elif [[ "$layout" == "window" && "$sel_count" -eq 1 ]]; then
     # Single host in new window

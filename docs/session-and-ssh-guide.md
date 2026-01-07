@@ -256,15 +256,10 @@ GitHub is excluded (in `05-github`) to allow Obsidian background sync without pr
 ├─────────────────────────────────────────────────────────┤
 │  PANE LAYOUTS (rearrange after opening)                  │
 ├─────────────────────────────────────────────────────────┤
-│  C-a M-1         → Even horizontal (side by side)       │
-│  C-a M-2         → Even vertical (stacked)              │
-│  C-a M-3         → Main horizontal                      │
-│  C-a M-4         → Main vertical                        │
-│  C-a M-5         → Tiled                                │
+│  C-a _           → Even horizontal (side by side)       │
+│  C-a =           → Even vertical (stacked)              │
 └─────────────────────────────────────────────────────────┘
 ```
-
-**Note:** `M-1` means Meta+1, which is `Alt+1` (or `Option+1` on Mac).
 
 ---
 
