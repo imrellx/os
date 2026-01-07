@@ -32,6 +32,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - Brewfile.common: sshpass (non-interactive SSH password authentication)
 - docs: `ssh-configuration.md` - comprehensive SSH setup documentation
 - docs: `plans/2026-01-07-ssh-picker-design.md` - SSH picker design with fzf/tmux
+- docs: `session-and-ssh-guide.md` - comprehensive user guide with quick reference card
 - zsh: `sp` function - SSH picker with fzf, multi-select, tmux layouts (tiled/sync)
 - tmux: `C-a S` keybinding to launch SSH picker in popup
 - ssh: `# OP:` markers on 202 hosts for explicit password auth detection

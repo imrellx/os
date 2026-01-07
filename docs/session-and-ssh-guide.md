@@ -120,13 +120,19 @@ Interactive SSH host picker with fzf, multi-select, and tmux integration.
 | Key | Action |
 |-----|--------|
 | `Enter` | Connect in new tmux window |
-| `C-p` | Add as pane in **current** window |
-| `C-t` | Connect in tiled panes (new window) |
-| `C-s` | Connect with synchronized input (new window) |
+| `C-p` | Pane mode (see below) |
+| `C-t` | Tiled panes in new window |
+| `C-s` | Synced panes in new window |
 | `Tab` | Toggle multi-select |
 | `Shift-Tab` | Toggle and move up |
 
-**C-t vs C-s:** Both create tiled panes. With C-t, each pane is independent. With C-s, keystrokes go to ALL panes simultaneously - useful for running the same command on multiple hosts.
+**C-p behavior:**
+- **1 host selected:** Adds pane to your **current** window (great for troubleshooting side-by-side)
+- **2+ hosts selected:** Creates **new** window with just those hosts
+
+**C-t vs C-s:** Both create tiled panes in a new window. With C-t, each pane is independent. With C-s, keystrokes go to ALL panes simultaneously - useful for running the same command on multiple hosts.
+
+**Window naming:** Multi-host windows show the first hostname + mode (e.g., `srv+tiled`, `pihole+sync`).
 
 ### Features
 
@@ -140,17 +146,23 @@ Interactive SSH host picker with fzf, multi-select, and tmux integration.
 ### Examples
 
 ```bash
-# Single host - new window
+# Single host → new window
 C-a S → type "ftd" → Enter
 
-# Add host as pane beside current session (for troubleshooting)
+# Single host → add as pane beside current session (troubleshooting)
 C-a S → type "srv" → C-p
 
-# Multiple hosts - tiled panes in new window
+# Two hosts → side-by-side panes in new window
+C-a S → Tab on pihole → Tab on nas → C-p
+
+# Multiple hosts → tiled panes (each independent)
 C-a S → Tab on each host → C-t
 
-# Multiple hosts - synchronized typing
+# Multiple hosts → synced panes (type once, runs on all)
 C-a S → Tab on each host → C-s
+
+# After opening panes, rearrange layout
+C-a L → keep pressing until layout looks right
 ```
 
 ---
@@ -232,33 +244,52 @@ GitHub is excluded (in `05-github`) to allow Obsidian background sync without pr
 ├─────────────────────────────────────────────────────────┤
 │  SSH CONNECTIONS                                         │
 ├─────────────────────────────────────────────────────────┤
-│  C-a S           → SSH picker popup (CAPITAL S)         │
+│  C-a S           → SSH picker popup (CAPITAL S!)        │
 │  sp              → SSH picker (shell)                   │
 │  cssh <host>     → Cisco SSH with 1Password             │
 ├─────────────────────────────────────────────────────────┤
-│  SSH PICKER ACTIONS                                      │
+│  SSH PICKER (inside C-a S)                               │
 ├─────────────────────────────────────────────────────────┤
 │  Enter           → New window                           │
-│  C-p             → Pane in current window               │
-│  C-t             → Tiled panes (new window)             │
-│  C-s             → Synced panes (new window)            │
-│  Tab             → Multi-select                         │
+│  C-p (1 host)    → Pane in current window               │
+│  C-p (2+ hosts)  → New window with just those hosts     │
+│  C-t             → Tiled panes (independent)            │
+│  C-s             → Synced panes (type to all)           │
+│  Tab             → Multi-select hosts                   │
 ├─────────────────────────────────────────────────────────┤
-│  TMUX BASICS                                             │
+│  WINDOWS                                                 │
 ├─────────────────────────────────────────────────────────┤
 │  C-a c           → New window                           │
-│  C-a |           → Split horizontal                     │
-│  C-a -           → Split vertical                       │
+│  C-a n / C-a p   → Next / previous window               │
+│  C-a Space       → Last window (toggle)                 │
+│  C-a 1-9         → Jump to window by number             │
+│  C-a ,           → Rename window                        │
+├─────────────────────────────────────────────────────────┤
+│  PANES                                                   │
+├─────────────────────────────────────────────────────────┤
+│  C-a |           → Split horizontal (side by side)      │
+│  C-a -           → Split vertical (top/bottom)          │
+│  C-a h/j/k/l     → Navigate panes (vim-style)           │
+│  C-a L           → Cycle layouts (keep pressing)        │
+│  C-a z           → Zoom pane (toggle fullscreen)        │
+│  C-a x           → Kill pane                            │
+├─────────────────────────────────────────────────────────┤
+│  SESSIONS                                                │
+├─────────────────────────────────────────────────────────┤
+│  C-a b           → Last session (toggle)                │
+│  C-a d           → Detach from session                  │
+│  C-a $           → Rename session                       │
+├─────────────────────────────────────────────────────────┤
+│  OTHER                                                   │
+├─────────────────────────────────────────────────────────┤
+│  C-a r           → Reload tmux config                   │
 │  C-a g           → Lazygit                              │
 │  C-a p           → Floating pane (floax)                │
-│  C-a Space       → Last window                          │
-│  C-a b           → Last session                         │
-├─────────────────────────────────────────────────────────┤
-│  PANE LAYOUTS (rearrange after opening)                  │
-├─────────────────────────────────────────────────────────┤
-│  C-a L           → Cycle layouts (keep pressing)        │
+│  C-a I           → Install TPM plugins                  │
 └─────────────────────────────────────────────────────────┘
 ```
+
+**Split mnemonics:** `|` is a vertical line → splits left/right. `-` is a horizontal line → splits top/bottom.
 
 ---
 
