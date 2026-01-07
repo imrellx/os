@@ -19,11 +19,17 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - Brewfile.common: tmuxinator (session layout manager)
 - tmuxinator: starter templates (lab, troubleshoot, ssh-multi)
 - tmux: sessionx tmuxinator integration (`Ctrl-t` to list templates)
-- ssh: modular config.d/ structure with organized host configs
-- ssh: extracted 200+ hosts from Royal TSX (home, work-jump, work-network, via-jump)
-- ssh: 1Password SSH Agent integration in defaults
-- ssh: GitHub exclusion from 1Password agent (for Obsidian background sync)
-- zsh: `cssh` function for Cisco SSH with 1Password password auto-fill
+- ssh: modular `~/.ssh/config.d/` structure with Include directive
+- ssh: `00-defaults` with 1Password SSH Agent, keep-alive, accept-new hostkeys
+- ssh: `05-github` exclusion from 1Password agent (fixes Obsidian background sync)
+- ssh: `10-home` with home network devices (proxmox, truenas, opnsense, etc.)
+- ssh: `20-work-jump` with jump hosts (ssh-srv, ssh-ma5, ssh-ld5)
+- ssh: `30-work-network` with direct work network devices
+- ssh: `37-work-via-jump` with 30+ devices requiring ProxyJump via ssh-srv
+- ssh: extracted 200+ hosts total from Royal TSX export (.rtsz XML)
+- ssh: 1Password SSH Agent integration (`~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock`)
+- zsh: `cssh` function for Cisco SSH with auto-password from 1Password CLI
+- Brewfile.common: sshpass (non-interactive SSH password authentication)
 
 ### Changed
 - tmux: disabled continuum auto-restore (use `C-a C-r` to restore manually)
