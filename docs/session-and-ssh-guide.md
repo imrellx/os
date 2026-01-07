@@ -120,10 +120,13 @@ Interactive SSH host picker with fzf, multi-select, and tmux integration.
 | Key | Action |
 |-----|--------|
 | `Enter` | Connect in new tmux window |
-| `C-t` | Connect in tiled panes |
-| `C-s` | Connect with synchronized input |
+| `C-p` | Add as pane in **current** window |
+| `C-t` | Connect in tiled panes (new window) |
+| `C-s` | Connect with synchronized input (new window) |
 | `Tab` | Toggle multi-select |
 | `Shift-Tab` | Toggle and move up |
+
+**C-t vs C-s:** Both create tiled panes. With C-t, each pane is independent. With C-s, keystrokes go to ALL panes simultaneously - useful for running the same command on multiple hosts.
 
 ### Features
 
@@ -140,7 +143,10 @@ Interactive SSH host picker with fzf, multi-select, and tmux integration.
 # Single host - new window
 C-a S → type "ftd" → Enter
 
-# Multiple hosts - tiled panes
+# Add host as pane beside current session (for troubleshooting)
+C-a S → type "srv" → C-p
+
+# Multiple hosts - tiled panes in new window
 C-a S → Tab on each host → C-t
 
 # Multiple hosts - synchronized typing
@@ -233,8 +239,9 @@ GitHub is excluded (in `05-github`) to allow Obsidian background sync without pr
 │  SSH PICKER ACTIONS                                      │
 ├─────────────────────────────────────────────────────────┤
 │  Enter           → New window                           │
-│  C-t             → Tiled panes                          │
-│  C-s             → Synchronized panes                   │
+│  C-p             → Pane in current window               │
+│  C-t             → Tiled panes (new window)             │
+│  C-s             → Synced panes (new window)            │
 │  Tab             → Multi-select                         │
 ├─────────────────────────────────────────────────────────┤
 │  TMUX BASICS                                             │
@@ -246,8 +253,18 @@ GitHub is excluded (in `05-github`) to allow Obsidian background sync without pr
 │  C-a p           → Floating pane (floax)                │
 │  C-a Space       → Last window                          │
 │  C-a b           → Last session                         │
+├─────────────────────────────────────────────────────────┤
+│  PANE LAYOUTS (rearrange after opening)                  │
+├─────────────────────────────────────────────────────────┤
+│  C-a M-1         → Even horizontal (side by side)       │
+│  C-a M-2         → Even vertical (stacked)              │
+│  C-a M-3         → Main horizontal                      │
+│  C-a M-4         → Main vertical                        │
+│  C-a M-5         → Tiled                                │
 └─────────────────────────────────────────────────────────┘
 ```
+
+**Note:** `M-1` means Meta+1, which is `Alt+1` (or `Option+1` on Mac).
 
 ---
 

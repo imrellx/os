@@ -35,11 +35,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - zsh: `sp` function - SSH picker with fzf, multi-select, tmux layouts (tiled/sync)
 - tmux: `C-a S` keybinding to launch SSH picker in popup
 - ssh: `# OP:` markers on 202 hosts for explicit password auth detection
+- sp: `C-p` keybinding to add host as pane in current window (not new window)
+- docs: pane layout shortcuts (`C-a M-1` through `C-a M-5`) in session guide
 
 ### Changed
 - zsh: `cssh` now uses `sshpass -d` (file descriptor) - password no longer visible in `ps`
 - tmux: disabled continuum auto-restore (use `C-a C-r` to restore manually)
 - sp: improved fzf input handling for tmux popup compatibility (uses `--bind start:reload`)
+- sp: window names now show hostname (e.g., `srv+tiled` instead of `ssh-tiled`)
 
 ### Security
 - Moved sensitive SSH host configs (10-home through 37-*) to private `os-private` repository

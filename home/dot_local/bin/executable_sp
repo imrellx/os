@@ -103,8 +103,8 @@ FZF_RESULT_FILE="/tmp/sp-fzf-result-$$"
     --query="${1:-}" \
     --preview="h=\$(echo {} | cut -d' ' -f1); grep -h \"^Host \$h\$\" -A10 $SSH_CONFIG_DIR/* 2>/dev/null | head -12" \
     --preview-window='right:40%:wrap' \
-    --header='Enter: window | C-t: tiled | C-s: sync | Tab: multi' \
-    --expect='ctrl-t,ctrl-s' \
+    --header='Enter: window | C-p: pane | C-t: tiled | C-s: sync | Tab: multi' \
+    --expect='ctrl-t,ctrl-s,ctrl-p' \
     --bind "start:reload(cat $DISPLAY_FILE)" \
     > "$FZF_RESULT_FILE" || { rm -f "$FZF_RESULT_FILE"; exit 0; }
 
@@ -123,6 +123,7 @@ selected_hosts=$(print -r -- "$fzf_result" | tail -n +2 | cut -d' ' -f1)
 case "$key_pressed" in
     ctrl-t) layout="tiled" ;;
     ctrl-s) layout="sync" ;;
+    ctrl-p) layout="pane" ;;
     *)      layout="window" ;;
 esac
 
@@ -143,17 +144,33 @@ build_cmd() {
     fi
 }
 
-# Execute
-if [[ "$layout" == "window" && "$sel_count" -eq 1 ]]; then
-    h=$(print -r -- "$selected_hosts" | head -1)
-    cmd=$(build_cmd "$h" "$(get_op "$h")")
-    tmux new-window -n "$h" "$cmd"
+# Build window name from hosts
+first_host=$(print -r -- "$selected_hosts" | head -1)
+if [[ "$sel_count" -gt 1 ]]; then
+    win_name="${first_host}+${layout}"
 else
+    win_name="$first_host"
+fi
+
+# Execute based on layout
+if [[ "$layout" == "pane" ]]; then
+    # Add to current window as pane(s)
+    print -r -- "$selected_hosts" | while IFS= read -r h; do
+        cmd=$(build_cmd "$h" "$(get_op "$h")")
+        tmux split-window "$cmd"
+        tmux select-layout tiled
+    done
+elif [[ "$layout" == "window" && "$sel_count" -eq 1 ]]; then
+    # Single host in new window
+    cmd=$(build_cmd "$first_host" "$(get_op "$first_host")")
+    tmux new-window -n "$win_name" "$cmd"
+else
+    # Multiple hosts in new window (tiled or sync)
     first=true
     print -r -- "$selected_hosts" | while IFS= read -r h; do
         cmd=$(build_cmd "$h" "$(get_op "$h")")
         if $first; then
-            tmux new-window -n "ssh-${layout}" "$cmd"
+            tmux new-window -n "$win_name" "$cmd"
             first=false
         else
             tmux split-window "$cmd"
