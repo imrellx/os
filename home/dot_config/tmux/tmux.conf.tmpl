@@ -86,8 +86,8 @@ set-option -g status-style "bg=default"
 set -g status-right "#(cd #{pane_current_path}; git rev-parse --abbrev-ref HEAD) "
 set-option -g window-status-format "#{window_index}:#{window_name}#{window_flags} "
 set-option -g window-status-current-format "#{window_index}:#{window_name}#{window_flags} "
-set-option -g window-status-current-style "fg=#e1a345"
-set-option -g window-status-last-style "fg=#936a2e"
+set-option -g window-status-current-style "fg=yellow,bold"
+set-option -g window-status-last-style "fg=yellow"
 set-option -g window-status-activity-style none
 
 # set -g status-justify centre
