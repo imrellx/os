@@ -1,0 +1,147 @@
+#!/usr/bin/env zsh
+# ABOUTME: SSH host picker with fzf and tmux integration
+# ABOUTME: Standalone script for use in tmux popups
+
+ssh_config_dir="${SSH_CONFIG_DIR:-$HOME/.ssh/config.d}"
+hosts_cache="/tmp/sp-hosts-$$"
+
+# Parse SSH configs
+parse_hosts() {
+    local current_host="" current_ip="" current_op=""
+    local line word
+
+    for file in "$ssh_config_dir"/*; do
+        [[ -f "$file" ]] || continue
+        [[ "$(basename "$file")" == "00-defaults" ]] && continue
+        [[ "$(basename "$file")" == "05-github" ]] && continue
+
+        while IFS= read -r line; do
+            [[ -z "$line" ]] && continue
+            [[ "$line" == \#* && "$line" != *"# OP:"* ]] && continue
+
+            if [[ "$line" == Host\ * ]]; then
+                if [[ -n "$current_host" && -n "$current_ip" ]]; then
+                    echo "${current_host}|${current_ip}|${current_op}"
+                fi
+                word="${line#Host }"
+                word="${word%% *}"
+                [[ "$word" == *\** ]] && continue
+                current_host="$word"
+                current_ip=""
+                current_op=""
+            elif [[ "$line" == *HostName\ * ]]; then
+                word="${line#*HostName }"
+                word="${word%% *}"
+                current_ip="$word"
+            elif [[ "$line" == *"# OP:"* ]]; then
+                word="${line#*# OP: }"
+                word="${word%% *}"
+                current_op="$word"
+            fi
+        done < "$file"
+
+        if [[ -n "$current_host" && -n "$current_ip" ]]; then
+            echo "${current_host}|${current_ip}|${current_op}"
+        fi
+        current_host="" current_ip="" current_op=""
+    done
+}
+
+# Get OP reference for a host
+get_op_ref() {
+    grep "^${1}|" "$hosts_cache" | cut -d'|' -f3
+}
+
+# Build tmux command
+tmux_cmd() {
+    local host="$1" op_ref="$2"
+    if [[ -n "$op_ref" ]]; then
+        echo "zsh -c 'sshpass -d 3 3< <(op read \"$op_ref\") ssh $host || read -k1 -s'"
+    else
+        echo "ssh $host || read -k1 -s"
+    fi
+}
+
+# Build cache
+parse_hosts > "$hosts_cache"
+
+# Format for display
+display_list=$(awk -F'|' '{print $1 " (" $2 ")"}' "$hosts_cache")
+
+if [[ -z "$display_list" ]]; then
+    echo "No SSH hosts found in $ssh_config_dir"
+    rm -f "$hosts_cache"
+    exit 1
+fi
+
+# fzf picker
+fzf_result=$(echo "$display_list" | fzf \
+    --multi \
+    --height 100% \
+    --reverse \
+    --border rounded \
+    --border-label ' SSH Hosts ' \
+    --prompt '  ' \
+    --pointer '▶' \
+    --marker '✓' \
+    --query "${1:-}" \
+    --preview "host=\$(echo {} | cut -d' ' -f1); grep \"^Host \$host\$\" -A10 $ssh_config_dir/* 2>/dev/null | head -12" \
+    --preview-window 'right:40%:wrap' \
+    --header 'Enter: window | C-t: tiled | C-s: sync | Tab: select' \
+    --color 'header:italic:dim' \
+    --expect 'ctrl-t,ctrl-s' \
+)
+
+[[ -z "$fzf_result" ]] && { rm -f "$hosts_cache"; exit 0; }
+
+# Parse result
+key_pressed=$(echo "$fzf_result" | head -1)
+selected_hosts=$(echo "$fzf_result" | tail -n +2 | cut -d' ' -f1)
+
+[[ -z "$selected_hosts" ]] && { rm -f "$hosts_cache"; exit 0; }
+
+# Determine layout
+case "$key_pressed" in
+    ctrl-t) layout="tiled" ;;
+    ctrl-s) layout="sync" ;;
+    *)      layout="window" ;;
+esac
+
+host_count=$(echo "$selected_hosts" | wc -l | tr -d ' ')
+
+# Execute
+if [[ "$layout" == "window" && "$host_count" -eq 1 ]]; then
+    host=$(echo "$selected_hosts" | head -1)
+    op_ref=$(get_op_ref "$host")
+    cmd=$(tmux_cmd "$host" "$op_ref")
+    tmux new-window -n "$host" "$cmd"
+elif [[ "$layout" == "tiled" || "$layout" == "window" ]]; then
+    first=true
+    while IFS= read -r host; do
+        op_ref=$(get_op_ref "$host")
+        cmd=$(tmux_cmd "$host" "$op_ref")
+        if $first; then
+            tmux new-window -n "ssh-multi" "$cmd"
+            first=false
+        else
+            tmux split-window "$cmd"
+            tmux select-layout tiled
+        fi
+    done <<< "$selected_hosts"
+elif [[ "$layout" == "sync" ]]; then
+    first=true
+    while IFS= read -r host; do
+        op_ref=$(get_op_ref "$host")
+        cmd=$(tmux_cmd "$host" "$op_ref")
+        if $first; then
+            tmux new-window -n "ssh-sync" "$cmd"
+            first=false
+        else
+            tmux split-window "$cmd"
+            tmux select-layout tiled
+        fi
+    done <<< "$selected_hosts"
+    tmux set-window-option synchronize-panes on
+fi
+
+rm -f "$hosts_cache"

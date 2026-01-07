@@ -206,8 +206,8 @@ bind C-f display-popup -E "\
     cut -d ' ' -f 1 |\
     xargs tmux select-window -t"
 
-# SSH host picker (sp function)
-bind S display-popup -E -w 80% -h 70% "zsh -c 'source ~/.config/zsh/aliases.zsh; sp'"
+# SSH host picker (sp script)
+bind S display-popup -E -w 80% -h 70% "~/.local/bin/sp"
 
 # Move tmux status bar to top
 bind-key C-k run-shell "tmux set-option -g status-position top;"
