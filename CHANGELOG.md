@@ -14,14 +14,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - tmux: tmux-sessionx plugin (fuzzy session manager with preview, `C-a o`)
 - tmux: tmux-floax plugin (floating pane scratchpad, `C-a p`)
 - tmux: sessionx x-path (~/.config)
-- sesh: config with named sessions (vault, family, os, pai)
-- zsh: `ss` alias for `sesh connect`
+- sesh: config with named sessions (o-vault, v-vault, o-family, v-family, os, pai)
+- zsh: `ss` function for sesh with fzf picker and preview
 - Brewfile.common: tmuxinator (session layout manager)
 - tmuxinator: starter templates (lab, troubleshoot, ssh-multi)
 - tmux: sessionx tmuxinator integration (`Ctrl-t` to list templates)
 - ssh: modular config.d/ structure with organized host configs
 - ssh: extracted 200+ hosts from Royal TSX (home, work-jump, work-network, via-jump)
 - ssh: 1Password SSH Agent integration in defaults
+- ssh: GitHub exclusion from 1Password agent (for Obsidian background sync)
+- zsh: `cssh` function for Cisco SSH with 1Password password auto-fill
 
 ### Changed
 - tmux: disabled continuum auto-restore (use `C-a C-r` to restore manually)
