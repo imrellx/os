@@ -39,6 +39,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - ssh: `# OP:` markers on 202 hosts for explicit password auth detection
 - sp: `C-p` keybinding - single host adds pane to current window, multiple hosts create new window
 - tmux: `C-a L` cycles through pane layouts (simpler than separate horizontal/vertical keys)
+- ssh: ChromaTerm syntax highlighting for Cisco IOS sessions (jellybeans-flexoki colors)
+- chromaterm: `.chromaterm.yml` config with patterns for interfaces, VLANs, spanning-tree, ACLs, BGP, EIGRP, OSPF
+- zsh: `sshc` alias for explicit colored SSH, `sshn` for no-color SSH
+- sp: automatic ChromaTerm integration when `ct` command available
+- cssh: automatic ChromaTerm integration when `ct` command available
 
 ### Changed
 - wezterm: reverted to jellybeans-flexoki (flexoki-dark too intense)

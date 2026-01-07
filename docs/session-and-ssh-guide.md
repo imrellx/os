@@ -14,6 +14,7 @@ Quick reference for all session and SSH tools configured in this system.
 | **tmuxinator** | Predefined session layouts | `mux <template>` or `C-a o` then `C-t` |
 | **sp** | SSH host picker with multi-select | `C-a S` (capital S) or `sp` in shell |
 | **cssh** | Cisco SSH with 1Password auto-auth | `cssh <host>` |
+| **sshc/sshn** | Colored/normal SSH aliases | `sshc <host>` or `sshn <host>` |
 
 ---
 
@@ -192,6 +193,53 @@ Override with `CSSH_OP_REF` environment variable.
 
 ---
 
+## Syntax Highlighting (ChromaTerm)
+
+SSH sessions to network devices support Cisco IOS syntax highlighting via ChromaTerm.
+
+### Installation
+
+ChromaTerm must be installed separately (not in Brewfile):
+
+```bash
+uv tool install chromaterm
+```
+
+This adds the `ct` command to `~/.local/bin/` (in PATH via mise/uv setup).
+
+### How It Works
+
+When `ct` is available, these tools automatically wrap SSH with ChromaTerm:
+- `sp` picker (both shell function and standalone script)
+- `cssh` function
+
+### Usage
+
+Highlighting is **automatic** when ChromaTerm is installed. For explicit control:
+
+```bash
+sshc <host>      # Colored SSH (forces ChromaTerm)
+sshn <host>      # Normal SSH (no color)
+```
+
+### Customization
+
+Config file: `~/.chromaterm.yml`
+
+Includes patterns for:
+- Interface headers, descriptions
+- VLANs (access, voice, native, allowed)
+- Spanning-tree (portfast, bpduguard)
+- IP/IPv6 addresses, MAC addresses
+- Status indicators (up/down/shutdown)
+- Routing protocols (BGP, EIGRP, OSPF states)
+- ACLs, route-maps, prefix-lists
+- VRF, PoE, trunk configuration
+
+Color scheme: Jellybeans-Flexoki (matches terminal/tmux theme).
+
+---
+
 ## SSH Configuration
 
 Modular SSH config in `~/.ssh/config.d/`:
@@ -247,6 +295,8 @@ GitHub is excluded (in `05-github`) to allow Obsidian background sync without pr
 │  C-a S           → SSH picker popup (CAPITAL S!)        │
 │  sp              → SSH picker (shell)                   │
 │  cssh <host>     → Cisco SSH with 1Password             │
+│  sshc <host>     → Colored SSH (ChromaTerm)             │
+│  sshn <host>     → Normal SSH (no color)                │
 ├─────────────────────────────────────────────────────────┤
 │  SSH PICKER (inside C-a S)                               │
 ├─────────────────────────────────────────────────────────┤

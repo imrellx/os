@@ -314,8 +314,17 @@ cssh() {
         return 1
     fi
     local op_ref="${CSSH_OP_REF:-op://work/ivn-admin-n/password}"
-    sshpass -d 3 3< <(op read "$op_ref") ssh "$@"
+    # Use ct (chromaterm) wrapper if available for syntax highlighting
+    local ssh_cmd="ssh"
+    command -v ct &>/dev/null && ssh_cmd="ct ssh"
+    sshpass -d 3 3< <(op read "$op_ref") $ssh_cmd "$@"
 }
+
+# SSH with explicit ChromaTerm control
+# sshc - Colored SSH (uses ChromaTerm if installed)
+# sshn - Normal SSH (no ChromaTerm, plain output)
+alias sshc='ct ssh'
+alias sshn='command ssh'
 
 # sp - SSH picker with fzf and tmux integration
 # Usage: sp [search-term]
@@ -390,6 +399,9 @@ sp() {
     _sp_connect() {
         local host="$1"
         local op_ref="$(_sp_get_op_ref "$host")"
+        # Use ct (chromaterm) wrapper if available for syntax highlighting
+        local ssh_cmd="ssh"
+        command -v ct &>/dev/null && ssh_cmd="ct ssh"
 
         if [[ -n "$op_ref" ]]; then
             # Password auth via 1Password
@@ -397,10 +409,10 @@ sp() {
                 echo "Error: 1Password CLI (op) not installed" >&2
                 return 1
             fi
-            sshpass -d 3 3< <(op read "$op_ref") ssh "$host"
+            sshpass -d 3 3< <(op read "$op_ref") $ssh_cmd "$host"
         else
             # Key auth
-            ssh "$host"
+            $ssh_cmd "$host"
         fi
     }
 
@@ -461,11 +473,15 @@ sp() {
     # Helper to build tmux command (wraps in zsh for process substitution)
     _sp_tmux_cmd() {
         local host="$1" op_ref="$2"
+        # Use ct (chromaterm) wrapper if available for syntax highlighting
+        local ssh_cmd="ssh"
+        command -v ct &>/dev/null && ssh_cmd="ct ssh"
+
         if [[ -n "$op_ref" ]]; then
             # Use zsh -c for process substitution support
-            echo "zsh -c 'sshpass -d 3 3< <(op read \"$op_ref\") ssh $host || read -k1 -s'"
+            echo "zsh -c 'sshpass -d 3 3< <(op read \"$op_ref\") $ssh_cmd $host || read -k1 -s'"
         else
-            echo "ssh $host || read -k1 -s"
+            echo "$ssh_cmd $host || read -k1 -s"
         fi
     }
 
