@@ -64,6 +64,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - sp: window names now show hostname (e.g., `srv+tiled` instead of `ssh-tiled`)
 
 ### Security
+- Moved proprietary fonts to private `fonts-private` repository (Berkeley Mono, MonoLisa, Operator Mono, PragmataPro, etc.)
+- Configured chezmoi externals to pull fonts from `fonts-private` via SSH
 - Moved sensitive SSH host configs (10-home through 37-*) to private `os-private` repository
 - Configured chezmoi externals (`.chezmoiexternal.toml`) to pull SSH configs via SSH URL
 - All 12 `config.d/` files now live in private repo (including non-sensitive 00-defaults, 05-github)

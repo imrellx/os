@@ -1,8 +1,14 @@
 # ABOUTME: Chezmoi external sources configuration
-# ABOUTME: Pulls sensitive SSH configs from private repository
+# ABOUTME: Pulls sensitive configs from private repositories
 
 [".ssh/config.d"]
 type = "git-repo"
 url = "git@github.com:imrellx/os-private.git"
+refreshPeriod = "168h"
+clone.args = ["--depth", "1"]
+
+[".config/fonts"]
+type = "git-repo"
+url = "git@github.com:imrellx/fonts-private.git"
 refreshPeriod = "168h"
 clone.args = ["--depth", "1"]

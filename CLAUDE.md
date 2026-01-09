@@ -7,14 +7,17 @@ Command center for managing Ivo's machines. Claude is the executing agent for AL
 
 ## Repository Structure
 
-This project spans TWO repositories:
+This project spans THREE repositories:
 
 | Repo | Visibility | Contents |
 |------|------------|----------|
 | `imrellx/os` | **Public** | All configs, scripts, docs, Brewfiles |
 | `imrellx/os-private` | **Private** | SSH host configs (`~/.ssh/config.d/*`) |
+| `imrellx/fonts-private` | **Private** | Proprietary fonts (`~/.config/fonts/`) |
 
-**How it works:** The public repo contains `.chezmoiexternal.toml` which tells chezmoi to clone `os-private` into `~/.ssh/config.d/` during `chezmoi apply`. This keeps 200+ SSH hosts with internal IPs out of the public repo.
+**How it works:** The public repo contains `.chezmoiexternal.toml` which tells chezmoi to clone private repos during `chezmoi apply`:
+- `os-private` → `~/.ssh/config.d/` (200+ SSH hosts with internal IPs)
+- `fonts-private` → `~/.config/fonts/` (proprietary/commercial fonts)
 
 **On new machine setup:**
 ```bash
