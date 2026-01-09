@@ -45,6 +45,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - tmux: `C-a S` keybinding to launch SSH picker in popup
 - ssh: `# OP:` markers on 202 hosts for explicit password auth detection
 - sp: `C-p` keybinding - single host adds pane to current window, multiple hosts create new window
+- sp: `C-h` keybinding - run SSH in current pane (for pre-split panes)
 - tmux: `C-a L` cycles through pane layouts (simpler than separate horizontal/vertical keys)
 - ssh: ChromaTerm syntax highlighting for Cisco IOS sessions (jellybeans-flexoki colors)
 - chromaterm: `.chromaterm.yml` config with patterns for interfaces, VLANs, spanning-tree, ACLs, BGP, EIGRP, OSPF

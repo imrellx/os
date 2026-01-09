@@ -8,6 +8,26 @@ if [[ -n "$SP_DEBUG" ]]; then
     set -x
 fi
 
+# Parse arguments
+PANE_ID=""
+QUERY=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --pane-id)
+            PANE_ID="${2:-}"
+            shift
+            [[ $# -gt 0 ]] && shift
+            ;;
+        *) QUERY="$1"; shift ;;
+    esac
+done
+
+# If no pane ID passed, query tmux for the active pane
+# (popup doesn't affect the underlying pane structure)
+if [[ -z "$PANE_ID" ]]; then
+    PANE_ID=$(tmux list-panes -F '#{pane_active} #{pane_id}' | awk '$1==1 {print $2}')
+fi
+
 SSH_CONFIG_DIR="${SSH_CONFIG_DIR:-$HOME/.ssh/config.d}"
 HOSTS_FILE="/tmp/sp-hosts-$$"
 DISPLAY_FILE="/tmp/sp-display-$$"
@@ -100,11 +120,11 @@ FZF_RESULT_FILE="/tmp/sp-fzf-result-$$"
     --prompt='  ' \
     --pointer='▶' \
     --marker='✓' \
-    --query="${1:-}" \
+    --query="${QUERY:-}" \
     --preview="h=\$(echo {} | cut -d' ' -f1); grep -h \"^Host \$h\$\" -A10 $SSH_CONFIG_DIR/* 2>/dev/null | head -12" \
     --preview-window='right:40%:wrap' \
-    --header='Enter: window | C-p: pane | C-t: tiled | C-s: sync | Tab: multi' \
-    --expect='ctrl-t,ctrl-s,ctrl-p' \
+    --header='Enter: window | C-h: here | C-p: pane | C-t: tiled | C-s: sync | Tab: multi' \
+    --expect='ctrl-h,ctrl-t,ctrl-s,ctrl-p' \
     --bind "start:reload(cat $DISPLAY_FILE)" \
     > "$FZF_RESULT_FILE" || { rm -f "$FZF_RESULT_FILE"; exit 0; }
 
@@ -121,6 +141,7 @@ selected_hosts=$(print -r -- "$fzf_result" | tail -n +2 | cut -d' ' -f1)
 
 # Determine layout
 case "$key_pressed" in
+    ctrl-h) layout="here" ;;
     ctrl-t) layout="tiled" ;;
     ctrl-s) layout="sync" ;;
     ctrl-p) layout="pane" ;;
@@ -159,7 +180,17 @@ else
 fi
 
 # Execute based on layout
-if [[ "$layout" == "pane" && "$sel_count" -eq 1 ]]; then
+if [[ "$layout" == "here" ]]; then
+    # Run in current pane (requires --pane-id from tmux popup)
+    if [[ -n "$PANE_ID" ]]; then
+        cmd=$(build_cmd "$first_host" "$(get_op "$first_host")")
+        tmux send-keys -t "$PANE_ID" "$cmd" Enter
+    else
+        # Fallback: no pane ID available, create new window instead
+        cmd=$(build_cmd "$first_host" "$(get_op "$first_host")")
+        tmux new-window -n "$first_host" "$cmd"
+    fi
+elif [[ "$layout" == "pane" && "$sel_count" -eq 1 ]]; then
     # Single host: add to current window as pane
     cmd=$(build_cmd "$first_host" "$(get_op "$first_host")")
     tmux split-window "$cmd"
