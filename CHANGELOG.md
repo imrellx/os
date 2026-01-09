@@ -10,6 +10,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 ## [Unreleased]
 
 ### Added
+- tmux: flexoki-tmux theme plugin (fork of yukinord-tmux with Flexoki dark colors)
 - tmux: tmux-prefix-highlight plugin (visual indicator when prefix key is active)
 - tmux: jellybeans-tmux theme plugin (fork of tokyo-night-tmux with jellybeans-flexoki colors)
 - tmux: jellybeans-tmux powerline separators (pill-shaped status elements with `` and ``)
