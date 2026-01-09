@@ -56,7 +56,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 - tmux: vi copy-mode keybindings (`v` select, `C-v` rectangle, `y` copy)
 
 ### Changed
-- wezterm: reverted to jellybeans-flexoki (flexoki-dark too intense)
+- wezterm: switched to flexoki-dark theme
 - tmux: status line now uses ANSI colors instead of hex - follows terminal theme
 - zsh: `cssh` now uses `sshpass -d` (file descriptor) - password no longer visible in `ps`
 - tmux: disabled continuum auto-restore (use `C-a C-r` to restore manually)
