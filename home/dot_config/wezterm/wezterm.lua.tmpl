@@ -62,10 +62,11 @@ config.keys = {
 		mods = mod,
 		action = wezterm.action.CloseCurrentPane({ confirm = false }),
 	},
+	-- Shift+Enter sends CSI u sequence for Claude Code multi-line input in tmux
 	{
 		key = "Enter",
 		mods = "SHIFT",
-		action = wezterm.action.SendString("\x0a"),
+		action = wezterm.action.SendString("\x1b[13;2u"),
 	},
 }
 
