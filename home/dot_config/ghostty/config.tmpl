@@ -45,4 +45,5 @@ keybind = alt+up=resize_split:up,10
 keybind = alt+down=resize_split:down,10
 keybind = alt+left=resize_split:left,10
 keybind = alt+right=resize_split:right,10
-keybind = shift+enter=text:\n
+# Shift+Enter sends CSI u sequence for Claude Code multi-line input in tmux
+keybind = shift+enter=text:\x1b\x5b\x31\x33\x3b\x32\x75

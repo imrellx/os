@@ -10,6 +10,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 ## [Unreleased]
 
 ### Added
+- tmux: extended-keys configuration for modifier key passthrough (`extended-keys always`, `extended-keys-format csi-u`)
+- ghostty: Shift+Enter keybind sends CSI u sequence for Claude Code multi-line input in tmux
 - tmux: flexoki-tmux theme plugin (fork of yukinord-tmux with Flexoki dark colors)
 - tmux: tmux-prefix-highlight plugin (visual indicator when prefix key is active)
 - tmux: jellybeans-tmux theme plugin (fork of tokyo-night-tmux with jellybeans-flexoki colors)
