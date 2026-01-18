@@ -2,6 +2,27 @@
 
 All notable changes to PAI (Personal AI Infrastructure) customizations.
 
+## [2.5] - 2026-01-18
+
+### TaskTracker Integration
+
+Replaced ephemeral TodoWrite with persistent TaskTracker in Development workflows for cross-session task progress tracking.
+
+### New Tools
+- **Development/Tools/TaskTracker.ts** - CLI tool for persistent task tracking via YAML front matter in plan files. Commands: `init`, `status`, `start`, `done`, `blocked`, `note`, `resume`.
+
+### Updated Workflows
+- **ExecutePlan.md** - Replaced TodoWrite with TaskTracker commands. Added "Resuming Interrupted Work" section.
+- **SubagentDevelopment.md** - Replaced TodoWrite with TaskTracker commands.
+
+### Benefits
+- Task progress persists across sessions (stored in plan file front matter)
+- `resume` command tells you exactly where to pick up
+- `blocked` status with reason tracking
+- Progress percentage shown in `status` output
+
+---
+
 ## [2.4] - 2026-01-18
 
 ### Claude Code 2.1 Feature Integration
@@ -78,3 +99,4 @@ See `fixes-2026-01-16.md` for detailed documentation.
 | 2.3 | 2026-01-16 | Initial installation + bug fixes |
 | 2.3 | 2026-01-18 | Backup system created |
 | 2.4 | 2026-01-18 | Claude Code 2.1 integration (plan archiving, peer review, setup hook) |
+| 2.5 | 2026-01-18 | TaskTracker integration (persistent task tracking in Development workflows) |
