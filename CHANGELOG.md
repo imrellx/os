@@ -10,6 +10,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 ## [Unreleased]
 
 ### Added
+- Brewfile.darwin: devpod (dev container management for stateless workstation workflow)
+- docs/plans: devcontainer-workflow-design.md (stateless workstation architecture)
 - Brewfile.darwin: kitlangton-hex (Hex voice-to-text transcription tool)
 - tmux: extended-keys configuration for modifier key passthrough (`extended-keys always`, `extended-keys-format csi-u`)
 - ghostty: Shift+Enter keybind sends CSI u sequence for Claude Code multi-line input in tmux
