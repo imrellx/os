@@ -102,6 +102,10 @@ os/
     ├── audit-2026-01-06.md           # Initial system audit
     ├── ssh-configuration.md          # SSH setup documentation
     ├── session-and-ssh-guide.md      # User guide for SSH/session tools
+    ├── pai/                          # PAI customizations documentation
+    │   ├── CHANGELOG.md              # PAI version tracking
+    │   ├── fixes-2026-01-16.md       # Bug fix details
+    │   └── custom-skills.md          # Custom skill documentation
     └── plans/
         ├── 2026-01-06-os-management-design.md    # Original design doc
         ├── 2026-01-07-ssh-picker-design.md       # SSH picker design
@@ -385,6 +389,32 @@ Uses conventional commits: `feat(scope):`, `fix(scope):`, `docs:`, `security:`
 | `audit-2026-01-06.md` | Initial system state (193 formulae, 45 casks) |
 | `ssh-configuration.md` | SSH setup, 1Password, jump hosts |
 | `session-and-ssh-guide.md` | User guide with quick reference |
+
+---
+
+## PAI Customizations
+
+PAI (Personal AI Infrastructure) customizations are tracked separately:
+
+| Location | Contents |
+|----------|----------|
+| `docs/pai/` | Public documentation (this repo) |
+| `imrellx/pai-customizations` (private) | Actual customization files |
+
+### Restore After Fresh PAI Install
+
+```bash
+# Clone and restore customizations
+cd ~/Code/personal
+git clone git@github.com:imrellx/pai-customizations.git
+cp -r pai-customizations/skills/* ~/.claude/skills/
+cp pai-customizations/modified/hooks/* ~/.claude/hooks/
+cp pai-customizations/modified/scripts/statusline-command.sh ~/.claude/
+cp -r pai-customizations/USER ~/.claude/skills/CORE/
+cp pai-customizations/settings.json ~/.claude/
+```
+
+See `docs/pai/` for detailed documentation.
 
 ---
 
