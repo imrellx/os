@@ -2,6 +2,56 @@
 
 All notable changes to PAI (Personal AI Infrastructure) customizations.
 
+## [2.7] - 2026-01-18
+
+### Development Skill Enhancement
+
+Strengthened enforcement of Core Principles (TDD, Debugging, Verification) through explicit checkpoints, expanded decision trees, and failure path examples.
+
+### ExecutePlan Workflow
+
+**Enhanced Step 2** with explicit checkpoints:
+- **TDD Checkpoint:** Write failing test BEFORE implementation (not just "apply TDD discipline")
+- **Verification Checkpoint:** Show actual test output with evidence (not "should work")
+- Clear guidance on what to report vs. what's forbidden
+
+### DebuggingGuide Expanded
+
+**Phase 2 (Pattern Analysis):**
+- Decision tree for finding working examples (or handling when none exist)
+- Difference type table (Code, Config, Dependencies, Environment)
+- Structured comparison steps
+
+**Phase 3 (Hypothesis and Testing):**
+- Hypothesis template with good/bad examples
+- Result evaluation decision table (worked/new symptom/same symptom/partial)
+- Explicit "NEVER stack fixes" guidance
+
+**Phase 4 (Implementation):**
+- Failure escalation table (1st/2nd/3rd fix actions)
+- Explicit "After 3 failures" protocol with escalation script
+
+### SKILL.md Example 4
+
+Added failure path example showing:
+- 3 fix attempts with different symptoms
+- Proper escalation after 3rd failure
+- How to present options to human partner
+- Key lesson: 3 failures = architectural problem
+
+### Updated Files
+- **Development/Workflows/ExecutePlan.md** - TDD and Verification checkpoints in Step 2
+- **Development/DebuggingGuide.md** - Expanded Phases 2, 3, 4 with decision trees and tables
+- **Development/SKILL.md** - Added Example 4 (Escalation When Fix Fails)
+
+### Benefits
+- Core Principles now explicitly enforced at workflow level
+- Agents can't skip TDD/Verification by just "following steps"
+- Clear decision trees prevent vague hypotheses and stacked fixes
+- Failure path example teaches proper escalation
+
+---
+
 ## [2.6] - 2026-01-18
 
 ### Development Skill Routing Fix
@@ -123,3 +173,4 @@ See `fixes-2026-01-16.md` for detailed documentation.
 | 2.4 | 2026-01-18 | Claude Code 2.1 integration (plan archiving, peer review, setup hook) |
 | 2.5 | 2026-01-18 | TaskTracker integration (persistent task tracking in Development workflows) |
 | 2.6 | 2026-01-18 | Development skill routing fix (SubagentDevelopment default for plan execution) |
+| 2.7 | 2026-01-18 | Development skill enhancement (TDD/Verification checkpoints, expanded debugging phases, failure path examples) |
