@@ -2,6 +2,37 @@
 
 All notable changes to PAI (Personal AI Infrastructure) customizations.
 
+## [2.4] - 2026-01-18
+
+### Claude Code 2.1 Feature Integration
+
+Integrated Claude Code 2.1 features into PAI to improve plan quality, context management, and system efficiency.
+
+### New Hooks
+- **PlanArchive.hook.ts** - Archives approved plans to `MEMORY/PLANS/` with metadata when user approves via ExitPlanMode. Includes optional auto-review trigger.
+- **SetupHook.hook.ts** - Runs PAI initialization checks on `claude --init`. Verifies directories, skills, settings, and reports status.
+
+### New Workflows
+- **Peers/PlanReview.md** - Multi-AI plan review workflow. Queries Claude, Codex, and Gemini for plan critique (gaps, risks, improvements) with PROCEED/REVISE/RETHINK verdict.
+
+### Configuration Changes
+- Added `CLAUDE_MCP_TOOL_SEARCH: "auto:5"` - Enables MCP tool search at 5% threshold to preserve context
+- Added `ExitPlanMode` PostToolUse matcher for plan archiving
+- Added `Setup` hook category for `--init` support
+
+### Documentation
+- Added context-clearing strategy to `THEALGORITHM/Phases/Execute.md` - When to clear context after planning
+- Added context management reference to `THEALGORITHM/SKILL.md`
+- Created `USER/PREFERENCES.md` - Central preferences file with `autoreview_plans` option
+
+### Updated Files
+- `settings.json` - MCP tool search, new hooks
+- `skills/Peers/SKILL.md` - Added PlanReview workflow routing
+- `skills/THEALGORITHM/Phases/Execute.md` - Context management docs
+- `skills/THEALGORITHM/SKILL.md` - Context management reference
+
+---
+
 ## [2.3] - 2026-01-18
 
 ### Added
@@ -46,3 +77,4 @@ See `fixes-2026-01-16.md` for detailed documentation.
 |---------|------|-------|
 | 2.3 | 2026-01-16 | Initial installation + bug fixes |
 | 2.3 | 2026-01-18 | Backup system created |
+| 2.4 | 2026-01-18 | Claude Code 2.1 integration (plan archiving, peer review, setup hook) |
