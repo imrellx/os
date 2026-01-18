@@ -10,6 +10,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 ## [Unreleased]
 
 ### Added
+- CLAUDE.md: comprehensive rewrite with full repo documentation (430 lines)
 - Brewfile.darwin: devpod (dev container management for stateless workstation workflow)
 - docs/plans: devcontainer-workflow-design.md (stateless workstation architecture)
 - Brewfile.darwin: kitlangton-hex (Hex voice-to-text transcription tool)
