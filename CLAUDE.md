@@ -399,7 +399,17 @@ PAI (Personal AI Infrastructure) customizations are tracked separately:
 | Location | Contents |
 |----------|----------|
 | `docs/pai/` | Public documentation (this repo) |
-| `imrellx/pai-customizations` (private) | Actual customization files |
+| `imrellx/pai-customizations` (private) | Actual customization files + manifest |
+
+### Workflow: After Making PAI Changes
+
+**When you modify PAI (new skill, hook change, USER config, settings):**
+
+1. Check `pai-customizations/manifest.txt` - add new items if needed
+2. Sync: `cd ~/Code/personal/pai-customizations` and copy changed files
+3. Commit: `git add . && git commit -m "Sync: [what changed]" && git push`
+
+See `pai-customizations/README.md` for detailed sync commands.
 
 ### Restore After Fresh PAI Install
 
