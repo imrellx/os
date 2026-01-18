@@ -2,6 +2,28 @@
 
 All notable changes to PAI (Personal AI Infrastructure) customizations.
 
+## [2.6] - 2026-01-18
+
+### Development Skill Routing Fix
+
+Made SubagentDevelopment the default workflow for plan execution, preserving context and preventing exhaustion.
+
+### Updated Routing
+- **"Execute plan" → SubagentDevelopment** (was ExecutePlan) - Better context preservation
+- **"Execute directly" → ExecutePlan** - Explicit override for quick, direct execution
+
+### Updated Files
+- **Development/SKILL.md** - Swapped routing triggers, added workflow selection guidance table
+- **Development/Workflows/ExecutePlan.md** - Clarified use case, added "When to Use" section
+
+### Benefits
+- Plan execution no longer consumes main context rapidly
+- Each task gets fresh subagent context
+- ExecutePlan still available for quick 1-2 task fixes
+- Explicit trigger words make intent clear
+
+---
+
 ## [2.5] - 2026-01-18
 
 ### TaskTracker Integration
@@ -100,3 +122,4 @@ See `fixes-2026-01-16.md` for detailed documentation.
 | 2.3 | 2026-01-18 | Backup system created |
 | 2.4 | 2026-01-18 | Claude Code 2.1 integration (plan archiving, peer review, setup hook) |
 | 2.5 | 2026-01-18 | TaskTracker integration (persistent task tracking in Development workflows) |
+| 2.6 | 2026-01-18 | Development skill routing fix (SubagentDevelopment default for plan execution) |
