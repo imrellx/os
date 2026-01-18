@@ -2,6 +2,70 @@
 
 All notable changes to PAI (Personal AI Infrastructure) customizations.
 
+## [2.9] - 2026-01-18
+
+### Amplifier Agent Pattern Integration
+
+Ported three high-value patterns from archived Amplifier agents into PAI infrastructure.
+
+### Source Analysis
+Analyzed 30+ agent definitions from `pai-design/amplifier/` and `amplifier-foundation/` to identify patterns worth preserving.
+
+### Memory System Safety (MEMORYSYSTEM.md)
+
+Added safety patterns for large JSONL files to prevent token exhaustion and session crashes.
+
+**Source:** session-analyst agent's explicit warnings about 100k+ token lines
+
+**Content:**
+- Size thresholds table (Safe <100KB → Critical >1MB)
+- Safe extraction patterns (grep -n, jq field extraction, tail -N)
+- Pre-read size check script
+- Archive strategy for files exceeding 1MB
+
+### Quality Gate Modes (Development/SKILL.md, Development/Workflows/FullCycle.md)
+
+Added explicit ANALYZE, ARCHITECT, REVIEW modes for complex work with clear triggers and outputs.
+
+**Source:** zen-architect agent's three operating modes
+
+**Modes:**
+- **ANALYZE Mode** - Break down complex requirements into first principles → `docs/analysis/`
+- **ARCHITECT Mode** - Design system specifications before implementation → `docs/specs/`
+- **REVIEW Mode** - Quality checkpoint before declaring work complete → `docs/reviews/`
+
+**FullCycle Integration:**
+- Phase 1.5 (ANALYZE) - After Brainstorm, before Create Workspace
+- Phase 2.5 (ARCHITECT) - After Create Workspace, before Write Plan
+- Phase 4.5 (REVIEW) - After Execute, before Finish
+
+### Thinking Frameworks (THINKINGFRAMEWORKS.md - new file)
+
+Created cognitive tools reference for creative problem-solving.
+
+**Source patterns:**
+- pattern-emergence: "2+2=5 Framework"
+- ambiguity-guardian: Uncertainty Cartography
+- insight-synthesizer: Collision Zone Thinking, Inversion Exercises
+- knowledge-archaeologist: Temporal Stratigraphy
+
+**Frameworks:**
+| Framework | Use When | Output |
+|-----------|----------|--------|
+| 2+2=5 | Combining approaches | Synergistic solution |
+| Uncertainty Cartography | Incomplete info | Resolution strategy |
+| Collision Zone | Need breakthroughs | Unexpected connections |
+| Temporal Stratigraphy | Legacy code | Essential vs accidental |
+| Inversion | Finding blind spots | Safeguards |
+
+### Updated Files
+- **CORE/SYSTEM/MEMORYSYSTEM.md** - Added "Working with Large JSONL Files - Safety Patterns" section
+- **CORE/SYSTEM/THINKINGFRAMEWORKS.md** - New file (3.8KB, 5 frameworks)
+- **Development/SKILL.md** - Added "Quality Gate Modes (Complex Work)" section
+- **Development/Workflows/FullCycle.md** - Added Phase 1.5, 2.5, 4.5 optional quality gates
+
+---
+
 ## [2.8] - 2026-01-18
 
 ### Statusline Context Percentage Fix
@@ -211,3 +275,4 @@ See `fixes-2026-01-16.md` for detailed documentation.
 | 2.6 | 2026-01-18 | Development skill routing fix (SubagentDevelopment default for plan execution) |
 | 2.7 | 2026-01-18 | Development skill enhancement (TDD/Verification checkpoints, expanded debugging phases, failure path examples) |
 | 2.8 | 2026-01-18 | Statusline context percentage fix (show % toward autocompact, not % of total 200k) |
+| 2.9 | 2026-01-18 | Amplifier agent pattern integration (memory safety, quality gate modes, thinking frameworks) |
