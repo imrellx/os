@@ -2,6 +2,42 @@
 
 All notable changes to PAI (Personal AI Infrastructure) customizations.
 
+## [2.8] - 2026-01-18
+
+### Statusline Context Percentage Fix
+
+Fixed context percentage to show **"% toward autocompact"** instead of "% of total 200k", making it actually useful for predicting when compaction will trigger.
+
+### The Problem
+
+- Statusline showed 55% while `/context` showed 10% remaining until autocompact
+- This was because statusline used total 200k as denominator
+- But autocompact buffer (= MAX_OUTPUT_TOKENS) reserves significant space
+- With 80k max output, only 120k is actually usable before compaction
+
+### The Fix
+
+Now calculates effective window:
+```
+effective_window = context_max - MAX_OUTPUT_TOKENS
+real_pct = raw_pct × (context_max / effective_window)
+```
+
+Example with 80k max output:
+- Old: 55% of 200k (misleading)
+- New: 90% toward compact (10% left) (accurate)
+
+### Display Changes
+
+- Shows `X% (Y% left)` format for clarity
+- Normal mode shows effective window size: `90% (10% left → 120k)`
+- Color thresholds adjusted: green ≤50%, yellow ≤80%, red >80%
+
+### Updated Files
+- **statusline-command.sh** - Effective window calculation, adjusted display
+
+---
+
 ## [2.7] - 2026-01-18
 
 ### Development Skill Enhancement
@@ -174,3 +210,4 @@ See `fixes-2026-01-16.md` for detailed documentation.
 | 2.5 | 2026-01-18 | TaskTracker integration (persistent task tracking in Development workflows) |
 | 2.6 | 2026-01-18 | Development skill routing fix (SubagentDevelopment default for plan execution) |
 | 2.7 | 2026-01-18 | Development skill enhancement (TDD/Verification checkpoints, expanded debugging phases, failure path examples) |
+| 2.8 | 2026-01-18 | Statusline context percentage fix (show % toward autocompact, not % of total 200k) |
