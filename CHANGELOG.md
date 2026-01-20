@@ -9,6 +9,26 @@ Format: [Keep a Changelog](https://keepachangelog.com/)
 
 ## [Unreleased]
 
+### Changed
+- chromaterm: direct translation from vscode-cisco-config-highlight (Y-Ysss)
+  - Complete rewrite following tmLanguage.json structure (12 sections)
+  - Colors match VS Code extension exactly:
+    - Interface names: Green (#99ad6a)
+    - IOS command keywords: Cyan (#8fbfdc)
+    - IP addresses: Light blue (#8197bf)
+    - MAC addresses: Purple (#c6b6ee)
+    - Numbers: Bright gold (#ffaf00)
+    - permit/up: Green | deny/shutdown/down: Red
+    - native/voice: Red (#cf6a4c)
+    - Switchport modes (trunk/access): Gold (#dad085)
+    - Description/remark text: Gold (#dad085)
+    - Comments: Gray italic (#888888)
+  - 20 interface types including modern variants (HundredGigE, TwentyFiveGigE, AppGigabitEthernet, NVE, BD-VIF, VASI)
+  - Named object highlighting (route-map, policy-map, class-map, access-list, crypto, BGP peer-group)
+  - Routing protocol states (BGP Established/Idle, OSPF FULL/DOWN, STP FWD/BLK)
+  - Error message patterns (%Invalid input, %Incomplete command)
+  - Fixed Python regex limitations (variable-width lookbehinds split into fixed-width patterns)
+
 ### Added
 - docs/pai/: PAI customizations documentation (CHANGELOG.md, fixes-2026-01-16.md, custom-skills.md)
 - CLAUDE.md: comprehensive rewrite with full repo documentation (430 lines)

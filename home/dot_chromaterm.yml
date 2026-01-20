@@ -1,294 +1,650 @@
-# ABOUTME: ChromaTerm syntax highlighting rules for Cisco IOS/IOS-XE
-# ABOUTME: Jellybeans-Flexoki color scheme for terminal consistency
+# ABOUTME: ChromaTerm syntax highlighting for Cisco IOS/IOS-XE/NX-OS
+# ABOUTME: Direct translation from vscode-cisco-config-highlight (Y-Ysss)
 
 rules:
 # ==============================================================================
-# Interface Names (anywhere in output)
+# SECTION 1: Comments
+# Source: #comment repository
 # ==============================================================================
 
-- description: Interface name (TenGig/Gig/Fast/Ethernet full)
-  regex: \b(TenGigabitEthernet|GigabitEthernet|FastEthernet|Ethernet)\d+/\d+(/\d+)?
+- description: Comment line (! or #)
+  regex: ^\s*[!#].*
+  color: f#888888 italic
+
+# ==============================================================================
+# SECTION 2: Interface Types
+# Source: #interface_type repository - 15 interface patterns
+# Color: Green (#99ad6a) for all interface names
+# ==============================================================================
+
+# --- Ethernet Family (Full and Abbreviated) ---
+- description: Interface - Ethernet variants (full names)
+  regex: \b(HundredGigE|FortyGigabitEthernet|TwentyFiveGigE|TenGigabitEthernet|FiveGigabitEthernet|TwoGigabitEthernet|GigabitEthernet|FastEthernet|Ethernet)((\d+[/.])*\d+)?
   color: f#99ad6a
 
-- description: Interface name (short forms - Te/Gi/Fa/TwentyFiveGigE/FortyGigE/HundredGigE)
-  regex: \b(TwentyFiveGigE|FortyGigabitEthernet|HundredGigE|Te|Gi|Fa)\d+/\d+(/\d+)?
+- description: Interface - Ethernet variants (abbreviated)
+  regex: \b(Hu|Fo|Twe|Te|Fi|Tw|Gi|Fa|Eth?)((\d+[/.])*\d+)
   color: f#99ad6a
 
-- description: Interface name (AppGigabitEthernet/Bluetooth/Cellular)
-  regex: \b(AppGigabitEthernet|Bluetooth|Cellular)\d+/\d+(/\d+)?
+# --- Wireless ---
+- description: Interface - Dot11Radio (Wireless)
+  regex: \b[Dd]ot11[Rr]adio((\d+[/.])*\d+)?
   color: f#99ad6a
 
-- description: Interface name (Loopback/Tunnel/Port-channel)
-  regex: \b(Loopback|Tunnel|Port-channel|Po|BVI|Management|Mgmt)\d+
+# --- Virtual/Logical Interfaces ---
+- description: Interface - Loopback
+  regex: \b([Ll]oopback|Lo)(\d+)?
   color: f#99ad6a
 
-- description: Interface name (Serial)
-  regex: \bSerial\d+/\d+(/\d+)?
+- description: Interface - Port-channel
+  regex: \b([Pp]ort-?[Cc]hannel|Po)(\d+)?
+  color: f#99ad6a
+
+- description: Interface - Tunnel
+  regex: \b([Tt]unnel|Tu)(\d+)?
+  color: f#99ad6a
+
+- description: Interface - VLAN
+  regex: \b([Vv]lan|Vl)(\d+)?
+  color: f#99ad6a
+
+- description: Interface - Null
+  regex: \b([Nn]ull|Nu)(\d+)?
+  color: f#99ad6a
+
+# --- WAN/Serial Interfaces ---
+- description: Interface - Serial
+  regex: \b([Ss]erial|Se)((\d+[/.])*\d+)?
+  color: f#99ad6a
+
+- description: Interface - Cellular
+  regex: \b([Cc]ellular|Ce)((\d+[/.])*\d+)?
+  color: f#99ad6a
+
+# --- Template/Dial Interfaces ---
+- description: Interface - Virtual-Template
+  regex: \b([Vv]irtual-[Tt]emplate|Vt)(\d+)?
+  color: f#99ad6a
+
+- description: Interface - Dialer
+  regex: \b([Dd]ialer|Di)(\d+)?
+  color: f#99ad6a
+
+- description: Interface - Async
+  regex: \b([Aa]sync|As)(\d+)?
+  color: f#99ad6a
+
+# --- ISDN/ATM Interfaces ---
+- description: Interface - BRI (ISDN)
+  regex: \b([Bb][Rr][Ii]|BR)((\d+[/.])*\d+)?
+  color: f#99ad6a
+
+- description: Interface - BVI (Bridge Virtual Interface)
+  regex: \b([Bb][Vv][Ii]|BV)(\d+)?
+  color: f#99ad6a
+
+# --- Management ---
+- description: Interface - Management
+  regex: \b([Mm]anagement|[Mm]gmt|Mg)((\d+[/.])*\d+)?
+  color: f#99ad6a
+
+# --- Additional Interfaces (Beyond tmLanguage) ---
+- description: Interface - AppGigabitEthernet (App hosting)
+  regex: \bAppGigabitEthernet((\d+[/.])*\d+)?
+  color: f#99ad6a
+
+- description: Interface - NVE (VXLAN)
+  regex: \b[Nn]ve\d+
+  color: f#99ad6a
+
+- description: Interface - BD-VIF (Bridge Domain Virtual Interface)
+  regex: \bBD-VIF\d+
+  color: f#99ad6a
+
+- description: Interface - VASI (VRF-Aware Service Infrastructure)
+  regex: \b(vasileft|vasiright)\d+
+  color: f#99ad6a
+
+- description: Interface - Pseudowire
+  regex: \bpseudowire\s+\d+
   color: f#99ad6a
 
 # ==============================================================================
-# Interface Configuration (show run)
+# SECTION 3: VRF Configuration
+# Source: #vrf repository
 # ==============================================================================
 
-- description: Interface header line
-  regex: ^interface\s+\S+
-  color: f#99ad6a bold
+- description: VRF name (after forwarding/definition)
+  regex: (?<=[Vv]rf\s([Ff]orwarding|[Dd]efinition)\s)\S+
+  color: f#99ad6a
 
-- description: Description field
-  regex: ^\s+description\s+.*$
-  color: f#8fbfdc italic
-
-# ==============================================================================
-# VLAN Configuration
-# ==============================================================================
-
-- description: Access VLAN
-  regex: switchport\s+access\s+vlan\s+\d+
-  color: f#dad085
-
-- description: Voice VLAN
-  regex: switchport\s+voice\s+vlan\s+\d+
-  color: f#cf6a4c
-
-- description: Native VLAN
-  regex: native\s+vlan\s+\d+
-  color: f#cf6a4c bold
-
-- description: Allowed VLANs
-  regex: allowed\s+vlan\s+[\d,]+
-  color: f#dad085
-
-- description: VLAN number in show commands
-  regex: \bVlan\d+\b
-  color: f#dad085
+- description: VRF name (standalone VRF-xxx pattern)
+  regex: \bVRF-\S+
+  color: f#99ad6a
 
 # ==============================================================================
-# Spanning-tree
+# SECTION 4: IP/MAC Addresses
+# Source: #address repository
+# Color: Light Blue (#8197bf) for IP, Purple (#c6b6ee) for MAC
 # ==============================================================================
 
-- description: Spanning-tree portfast
-  regex: spanning-tree\s+portfast
-  color: f#2B5B77
-
-- description: Spanning-tree bpduguard
-  regex: spanning-tree\s+bpduguard\s+\S+
-  color: f#2B5B77
-
-- description: Spanning-tree commands
-  regex: spanning-tree\s+\S+
-  color: f#2B5B77
-
-# ==============================================================================
-# Trunk Configuration
-# ==============================================================================
-
-- description: Switchport mode trunk
-  regex: switchport\s+mode\s+trunk
-  color: f#c6b6ee
-
-- description: Switchport trunk native vlan
-  regex: switchport\s+trunk\s+native\s+vlan\s+\d+
-  color: f#cf6a4c
-
-- description: Switchport trunk allowed vlan
-  regex: switchport\s+trunk\s+allowed\s+vlan\s+[\d,\-]+
-  color: f#dad085
-
-- description: Switchport trunk encapsulation
-  regex: switchport\s+trunk\s+encapsulation\s+\S+
-  color: f#c6b6ee
-
-- description: Switchport mode access
-  regex: switchport\s+mode\s+access
-  color: f#dad085
-
-# ==============================================================================
-# IP Addressing
-# ==============================================================================
-
-- description: IPv4 addresses with optional CIDR
-  regex: \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(/\d{1,2})?
+# --- IPv4 ---
+- description: IPv4 address with CIDR
+  regex: ((25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)\.){3}(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)/(\d|[1-2]\d|3[0-2])
   color: f#8197bf
 
-- description: IPv6 addresses
+- description: IPv4 address (dotted decimal)
+  regex: ((25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)\.){3}(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)
+  color: f#8197bf
+
+# --- IPv6 ---
+- description: IPv6 address
   regex: ([0-9a-fA-F]{1,4}:){1,7}[0-9a-fA-F]{1,4}(/\d{1,3})?
   color: f#8197bf
 
-- description: MAC addresses (Cisco format)
+- description: IPv6 condensed (with ::)
+  regex: ([0-9a-fA-F]{1,4}:)*::([0-9a-fA-F]{1,4}:)*[0-9a-fA-F]{1,4}(/\d{1,3})?
+  color: f#8197bf
+
+# --- MAC Addresses ---
+- description: MAC address (Cisco format xxxx.xxxx.xxxx)
   regex: ([0-9a-fA-F]{4}\.){2}[0-9a-fA-F]{4}
   color: f#c6b6ee
 
-- description: MAC addresses (colon format)
+- description: MAC address (colon format xx:xx:xx:xx:xx:xx)
   regex: ([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}
   color: f#c6b6ee
 
+- description: MAC address (dash format xx-xx-xx-xx-xx-xx)
+  regex: ([0-9a-fA-F]{2}-){5}[0-9a-fA-F]{2}
+  color: f#c6b6ee
+
 # ==============================================================================
-# Status Indicators
+# SECTION 5: Strings (Description, Remark, Hostname)
+# Source: #string repository
 # ==============================================================================
 
-- description: Up status
-  regex: \b(up|Up|UP)\b
-  color: f#99ad6a bold
+# --- Description/Remark Text (Gold #dad085) ---
+- description: Description text content
+  regex: (?<=\b[Dd]escription\s).+$
+  color: f#dad085
 
-- description: Down status
-  regex: \b(down|Down|DOWN)\b
-  color: f#B05050 bold
+- description: Remark text content
+  regex: (?<=\b[Rr]emark\s).+$
+  color: f#dad085 italic
 
-- description: Shutdown command
-  regex: ^\s+shutdown\s*$
-  color: f#B05050 bold
-
-- description: No shutdown
-  regex: no\s+shutdown
+# --- Hostname (Green #99ad6a) ---
+- description: Hostname value
+  regex: (?<=[Hh]ostname\s)\S+
   color: f#99ad6a
 
-- description: Administratively down
+- description: Domain name value
+  regex: (?<=[Dd]omain[.-][Nn]ame\s)\S+
+  color: f#99ad6a
+
+# --- Username (Green #99ad6a) ---
+- description: Username value
+  regex: (?<=[Uu]sername\s)\S+
+  color: f#99ad6a
+
+# --- Passwords/Secrets (Gray dim #888888) ---
+- description: Password (encrypted)
+  regex: "[Pp]assword\\s+\\d+\\s+\\S+"
+  color: f#888888
+
+- description: Secret (encrypted)
+  regex: "[Ss]ecret\\s+\\d+\\s+\\S+"
+  color: f#888888
+
+# --- Logging/Syslog ---
+- description: Syslog message ID
+  regex: "%[A-Z0-9_]+-\\d+-[A-Z0-9_]+"
+  color: f#ffaf00
+
+# ==============================================================================
+# SECTION 6: Numeric Constants
+# Source: #numeric repository
+# Color: Bright Gold (#ffaf00)
+# ==============================================================================
+
+- description: Hexadecimal value
+  regex: \b0x[0-9a-fA-F]+\b
+  color: f#dad085
+
+- description: BGP community (AA:NN format)
+  regex: \b\d+:\d+\b
+  color: f#dad085
+
+# NOTE: Standalone integers handled at end to avoid overriding specific patterns
+
+# ==============================================================================
+# SECTION 7: Switchport/VLAN Keywords
+# Source: #keyword repository (vlan-type, switchport-mode sections)
+# ==============================================================================
+
+# --- Switchport Mode Keywords (Gold #dad085) ---
+- description: Keyword - access (switchport mode)
+  regex: \baccess\b
+  color: f#dad085
+
+- description: Keyword - trunk (switchport mode)
+  regex: \btrunk\b
+  color: f#dad085
+
+- description: Keyword - dynamic auto/desirable
+  regex: \b(auto|desirable)\b
+  color: f#dad085
+
+# --- VLAN Keywords ---
+- description: Keyword - vlan
+  regex: \bvlan\b
+  color: f#dad085
+
+- description: Keyword - allowed
+  regex: \ballowed\b
+  color: f#dad085
+
+- description: Keyword - native (Red #cf6a4c)
+  regex: \bnative\b
+  color: f#cf6a4c
+
+- description: Keyword - voice (Red #cf6a4c)
+  regex: \bvoice\b
+  color: f#cf6a4c
+
+# --- VLAN Protocol Keywords (Gold) ---
+- description: Keyword - protocol-vlan/mac-vlan/dot1q
+  regex: \b(protocol-vlan|mac-vlan|dot1q)\b
+  color: f#dad085
+
+# ==============================================================================
+# SECTION 8: ACL/Direction Keywords
+# Source: #keyword repository (permit-deny, direction sections)
+# ==============================================================================
+
+# --- Permit/Deny (Green/Red) ---
+- description: Keyword - permit (Green #99ad6a)
+  regex: \bpermit\b
+  color: f#99ad6a
+
+- description: Keyword - deny (Red #cf6a4c)
+  regex: \bdeny\b
+  color: f#cf6a4c
+
+# --- Direction Keywords (Cyan #8fbfdc) ---
+- description: Keyword - in/out
+  regex: \b(in|out)\b
+  color: f#8fbfdc
+
+- description: Keyword - input/output
+  regex: \b(input|output)\b
+  color: f#8fbfdc
+
+- description: Keyword - inside/outside
+  regex: \b(inside|outside)\b
+  color: f#8fbfdc
+
+# --- Quantifiers/Modifiers (Cyan) ---
+- description: Keyword - any/all
+  regex: \b(any|all)\b
+  color: f#8fbfdc
+
+# --- List Operations (Gold) ---
+- description: Keyword - add/remove/except
+  regex: \b(add|remove|except)\b
+  color: f#dad085
+
+# --- Match Types (Gold) ---
+- description: Keyword - match-any/match-all
+  regex: \b(match-any|match-all)\b
+  color: f#dad085
+
+# ==============================================================================
+# SECTION 9: Status Keywords
+# Source: #keyword repository (status, shutdown sections)
+# ==============================================================================
+
+# --- Up Status (Green #99ad6a bold) ---
+- description: Status - up
+  regex: \b[Uu][Pp]\b
+  color: f#99ad6a bold
+
+# --- Down Status (Red #B05050 bold) ---
+- description: Status - down
+  regex: \b[Dd][Oo][Ww][Nn]\b
+  color: f#B05050 bold
+
+- description: Status - deleted
+  regex: \b[Dd]eleted\b
+  color: f#B05050 bold
+
+- description: Status - administratively down
   regex: administratively\s+down
   color: f#B05050 bold
 
-- description: Line protocol up/down
-  regex: line\s+protocol\s+is\s+(up|down)
-  color: f#8197bf
+# --- Shutdown (Red #B05050 bold) ---
+- description: Keyword - shutdown
+  regex: \bshutdown\b
+  color: f#B05050 bold
 
 # ==============================================================================
-# Power over Ethernet
+# SECTION 10: Command Prefixes (no, default)
+# Source: #unused repository
 # ==============================================================================
 
-- description: Power inline never
-  regex: power\s+inline\s+never
-  color: f#ffaf00
+- description: Command - no (disable/negate) (Red #cf6a4c)
+  regex: \bno\b
+  color: f#cf6a4c
 
-- description: Power inline auto
-  regex: power\s+inline\s+auto
-  color: f#99ad6a
+- description: Command - default
+  regex: \bdefault\b
+  color: f#888888
 
 # ==============================================================================
-# ACL / Route-map / Prefix-list
+# SECTION 11: Named Objects (BGP, Crypto, Groups)
+# Source: #bgp, #crypto, #group repositories
+# Color: Green (#99ad6a) for names
 # ==============================================================================
 
-- description: Permit statements
-  regex: \b(permit)\b
-  color: f#99ad6a
-
-- description: Deny statements
-  regex: \b(deny)\b
-  color: f#B05050
-
+# --- Route-map / Policy-map / Class-map Names ---
 - description: Route-map name
-  regex: route-map\s+\S+
-  color: f#c6b6ee bold
+  regex: (?<=[Rr]oute-[Mm]ap\s)\S+
+  color: f#99ad6a
 
+- description: Policy-map name
+  regex: (?<=[Pp]olicy-[Mm]ap\s)\S+
+  color: f#99ad6a
+
+- description: Class-map name
+  regex: (?<=[Cc]lass-[Mm]ap\s)\S+
+  color: f#99ad6a
+
+- description: Class reference name
+  regex: (?<=class\s)\S+
+  color: f#99ad6a
+
+# --- Access-list Names ---
+- description: Access-list name
+  regex: (?<=[Aa]ccess-[Ll]ist\s)((extended|standard)\s)?\S+
+  color: f#99ad6a
+
+- description: IP access-list name
+  regex: (?<=[Ii]p\s[Aa]ccess-[Ll]ist\s(extended|standard)\s)\S+
+  color: f#99ad6a
+
+# --- Prefix-list / Object-group Names ---
 - description: Prefix-list name
-  regex: ip\s+prefix-list\s+\S+
-  color: f#c6b6ee
+  regex: (?<=[Pp]refix-[Ll]ist\s)\S+
+  color: f#99ad6a
 
-- description: Access-list number/name
-  regex: (access-list|ip\s+access-list)\s+\S+
-  color: f#c6b6ee
+- description: Object-group name (network)
+  regex: (?<=object-group\snetwork\s)\S+
+  color: f#99ad6a
+
+- description: Object-group name (service)
+  regex: (?<=object-group\sservice\s)\S+
+  color: f#99ad6a
+
+- description: Object-group name (security)
+  regex: (?<=object-group\ssecurity\s)\S+
+  color: f#99ad6a
+
+- description: Object-group name (icmp-type)
+  regex: (?<=object-group\sicmp-type\s)\S+
+  color: f#99ad6a
+
+# --- Crypto Names ---
+- description: Crypto-map name
+  regex: (?<=[Cc]rypto\s[Mm]ap\s)\S+
+  color: f#99ad6a
+
+- description: Transform-set name
+  regex: (?<=[Tt]ransform-[Ss]et\s)\S+
+  color: f#99ad6a
+
+- description: IPsec profile name
+  regex: (?<=[Ii]psec\s[Pp]rofile\s)\S+
+  color: f#99ad6a
+
+- description: ISAKMP profile name
+  regex: (?<=[Ii]sakmp\s[Pp]rofile\s)\S+
+  color: f#99ad6a
+
+- description: Keyring name
+  regex: (?<=keyring\s)\S+
+  color: f#99ad6a
+
+- description: Keyring local name
+  regex: (?<=keyring\slocal\s)\S+
+  color: f#99ad6a
+
+# --- BGP Names ---
+- description: BGP peer-group name
+  regex: (?<=[Pp]eer-[Gg]roup\s)\S+
+  color: f#99ad6a
+
+- description: BGP peer-session name
+  regex: (?<=[Pp]eer-[Ss]ession\s)\S+
+  color: f#99ad6a
+
+- description: BGP peer-policy name
+  regex: (?<=[Pp]eer-[Pp]olicy\s)\S+
+  color: f#99ad6a
+
+# --- Pool/Community Names ---
+- description: Pool name
+  regex: (?<=[Pp]ool\s)\S+
+  color: f#99ad6a
+
+- description: Community-list name
+  regex: (?<=[Cc]ommunity\s)\S+
+  color: f#99ad6a
 
 # ==============================================================================
-# BGP
+# SECTION 12: IOS Command Keywords
+# Source: #param1 repository (first parameter on line)
+# Color: Cyan (#8fbfdc)
 # ==============================================================================
 
-- description: BGP Established
+- description: Keyword - interface
+  regex: \binterface\b
+  color: f#8fbfdc
+
+- description: Keyword - ip
+  regex: \bip\b
+  color: f#8fbfdc
+
+- description: Keyword - ipv6
+  regex: \bipv6\b
+  color: f#8fbfdc
+
+- description: Keyword - router
+  regex: \brouter\b
+  color: f#8fbfdc
+
+- description: Keyword - spanning-tree
+  regex: \bspanning-tree\b
+  color: f#8fbfdc
+
+- description: Keyword - switchport
+  regex: \bswitchport\b
+  color: f#8fbfdc
+
+- description: Keyword - line
+  regex: \bline\b
+  color: f#8fbfdc
+
+- description: Keyword - aaa
+  regex: \baaa\b
+  color: f#8fbfdc
+
+- description: Keyword - snmp-server
+  regex: \bsnmp-server\b
+  color: f#8fbfdc
+
+- description: Keyword - logging
+  regex: \blogging\b
+  color: f#8fbfdc
+
+- description: Keyword - ntp
+  regex: \bntp\b
+  color: f#8fbfdc
+
+- description: Keyword - crypto
+  regex: \bcrypto\b
+  color: f#8fbfdc
+
+- description: Keyword - service
+  regex: \bservice\b
+  color: f#8fbfdc
+
+- description: Keyword - hostname
+  regex: \bhostname\b
+  color: f#8fbfdc
+
+- description: Keyword - enable
+  regex: \benable\b
+  color: f#8fbfdc
+
+- description: Keyword - username
+  regex: \busername\b
+  color: f#8fbfdc
+
+- description: Keyword - vrf
+  regex: \bvrf\b
+  color: f#8fbfdc
+
+- description: Keyword - address-family
+  regex: \baddress-family\b
+  color: f#8fbfdc
+
+- description: Keyword - exit-address-family
+  regex: \bexit-address-family\b
+  color: f#8fbfdc
+
+- description: Keyword - neighbor
+  regex: \bneighbor\b
+  color: f#8fbfdc
+
+- description: Keyword - network
+  regex: \bnetwork\b
+  color: f#8fbfdc
+
+- description: Keyword - default-gateway
+  regex: \bdefault-gateway\b
+  color: f#8fbfdc
+
+- description: Keyword - class
+  regex: \bclass\b
+  color: f#8fbfdc
+
+- description: Keyword - policy
+  regex: \bpolicy\b
+  color: f#8fbfdc
+
+- description: Keyword - route-map
+  regex: \broute-map\b
+  color: f#8fbfdc
+
+- description: Keyword - access-list
+  regex: \baccess-list\b
+  color: f#8fbfdc
+
+- description: Keyword - description
+  regex: \bdescription\b
+  color: f#8fbfdc
+
+- description: Keyword - banner
+  regex: \bbanner\b
+  color: f#8fbfdc
+
+- description: Keyword - bgp
+  regex: \bbgp\b
+  color: f#8fbfdc
+
+- description: Keyword - ospf
+  regex: \bospf\b
+  color: f#8fbfdc
+
+- description: Keyword - eigrp
+  regex: \beigrp\b
+  color: f#8fbfdc
+
+- description: Keyword - rip
+  regex: \brip\b
+  color: f#8fbfdc
+
+- description: Keyword - forwarding
+  regex: \bforwarding\b
+  color: f#8fbfdc
+
+- description: Keyword - definition
+  regex: \bdefinition\b
+  color: f#8fbfdc
+
+- description: Keyword - address
+  regex: \baddress\b
+  color: f#8fbfdc
+
+- description: Keyword - mask
+  regex: \bmask\b
+  color: f#8fbfdc
+
+- description: Keyword - remote-as
+  regex: \bremote-as\b
+  color: f#8fbfdc
+
+- description: Keyword - local-as
+  regex: \blocal-as\b
+  color: f#8fbfdc
+
+- description: Keyword - activate
+  regex: \bactivate\b
+  color: f#8fbfdc
+
+# ==============================================================================
+# ADDITIONAL: Routing Protocol States
+# Not in original tmLanguage but useful for operational output
+# ==============================================================================
+
+# --- BGP States ---
+- description: BGP - Established (Green)
   regex: \bEstablished\b
   color: f#99ad6a bold
 
-- description: BGP problematic states
+- description: BGP - Problem states (Red)
   regex: \b(Idle|Active|Connect|OpenSent|OpenConfirm)\b
   color: f#B05050
 
-- description: BGP router-id
-  regex: router-id\s+\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}
-  color: f#8197bf
-
-- description: BGP neighbor
-  regex: neighbor\s+\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}
-  color: f#8fbfdc
-
-- description: AS numbers
-  regex: \b(remote-as|local-as)\s+\d+
-  color: f#dad085
-
-# ==============================================================================
-# EIGRP
-# ==============================================================================
-
-- description: EIGRP router section
-  regex: ^router\s+eigrp\s+\S+
-  color: f#c6b6ee bold
-
-- description: EIGRP network statement
-  regex: ^\s+network\s+\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}
-  color: f#8197bf
-
-- description: EIGRP neighbor up
-  regex: EIGRP.*(neighbor|adjacency).*up
-  color: f#99ad6a
-
-- description: EIGRP neighbor down
-  regex: EIGRP.*(neighbor|adjacency).*(down|lost)
-  color: f#B05050
-
-- description: EIGRP passive-interface
-  regex: passive-interface\s+\S+
-  color: f#888888
-
-- description: EIGRP metric
-  regex: metric\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+
-  color: f#dad085
-
-- description: EIGRP named mode
-  regex: router\s+eigrp\s+\S+
-  color: f#c6b6ee bold
-
-- description: EIGRP address-family
-  regex: address-family\s+(ipv4|ipv6)
-  color: f#8197bf
-
-- description: EIGRP topology
-  regex: topology\s+base
-  color: f#2B5B77
-
-# ==============================================================================
-# OSPF (bonus)
-# ==============================================================================
-
-- description: OSPF router section
-  regex: ^router\s+ospf\s+\d+
-  color: f#c6b6ee bold
-
-- description: OSPF area
-  regex: area\s+\d+(\.\d+\.\d+\.\d+)?
-  color: f#dad085
-
-- description: OSPF FULL state
+# --- OSPF States ---
+- description: OSPF - FULL (Green)
   regex: \bFULL\b
   color: f#99ad6a bold
 
-- description: OSPF problem states
+- description: OSPF - Problem states (Red)
   regex: \b(DOWN|INIT|2WAY|EXSTART|EXCHANGE|LOADING)\b
   color: f#B05050
 
-# ==============================================================================
-# VRF
-# ==============================================================================
+- description: OSPF - DR/BDR roles
+  regex: \b(DR|BDR|DROTHER)\b
+  color: f#8fbfdc
 
-- description: VRF forwarding
-  regex: (ip\s+)?vrf\s+forwarding\s+\S+
+# --- STP States ---
+- description: STP - Forwarding (Green)
+  regex: \b(FWD|[Ff]orwarding)\b
   color: f#99ad6a
 
-- description: VRF definition
-  regex: ^(ip\s+)?vrf\s+(definition\s+)?\S+
-  color: f#c6b6ee bold
+- description: STP - Blocking (Red)
+  regex: \b(BLK|[Bb]locking)\b
+  color: f#B05050
+
+- description: STP - Learning/Listening (Gold)
+  regex: \b(LRN|LIS|[Ll]earning|[Ll]istening)\b
+  color: f#dad085
 
 # ==============================================================================
-# Structural Elements
+# ADDITIONAL: Router Prompts
 # ==============================================================================
-
-- description: Section separator
-  regex: ^!$
-  color: f#888888
 
 - description: Router prompt (config mode)
   regex: ^[A-Za-z0-9_-]+\(config[^)]*\)#
@@ -299,77 +655,35 @@ rules:
   color: f#8197bf bold
 
 # ==============================================================================
-# Routing Table (show ip route)
+# ADDITIONAL: Error Messages
 # ==============================================================================
 
-- description: Connected route
-  regex: ^C\s
-  color: f#99ad6a
+- description: Error - Invalid input
+  regex: "^%\\s*Invalid\\s+input"
+  color: f#B05050 bold
 
-- description: Local route
-  regex: ^L\s
-  color: f#8fbfdc
+- description: Error - Incomplete command
+  regex: "^%\\s*Incomplete\\s+command"
+  color: f#ffaf00
 
-- description: Static route
-  regex: ^S\s
-  color: f#c6b6ee
+- description: Error - Ambiguous command
+  regex: "^%\\s*Ambiguous\\s+command"
+  color: f#ffaf00
 
-- description: EIGRP route
-  regex: ^D\s
-  color: f#dad085
+- description: Error - Unknown command
+  regex: "^%\\s*Unknown\\s+command"
+  color: f#B05050
 
-- description: EIGRP external route
-  regex: ^D EX\s
-  color: f#cf6a4c
-
-- description: OSPF route
-  regex: ^O\s
-  color: f#8197bf
-
-- description: OSPF inter-area route
-  regex: ^O IA\s
-  color: f#8197bf
-
-- description: OSPF external route
-  regex: ^O (E1|E2|N1|N2)\s
-  color: f#cf6a4c
-
-- description: BGP route
-  regex: ^B\s
-  color: f#c6b6ee
-
-- description: RIP route
-  regex: ^R\s
-  color: f#888888
-
-- description: Route metric in brackets
-  regex: \[\d+/\d+\]
-  color: f#888888
-
-- description: Route age (time)
-  regex: \b\d+[dwh]\d*[dhms]?\b
-  color: f#888888
+- description: Error - General %message
+  regex: "^%[A-Z0-9_-]+"
+  color: f#ffaf00
 
 # ==============================================================================
-# Line Configuration
+# LAST: Standalone Numbers
+# Must be at end to avoid overriding specific patterns
+# Color: Bright Gold (#ffaf00)
 # ==============================================================================
 
-- description: Line console/vty
-  regex: ^line\s+(con|vty|aux)\s+\d+(\s+\d+)?
-  color: f#c6b6ee
-
-# ==============================================================================
-# Show Command Output
-# ==============================================================================
-
-- description: Interface column header
-  regex: ^Interface\s+IP-Address
-  color: f#888888 bold
-
-- description: Show version hostname
-  regex: ^\S+\s+uptime\s+is
-  color: f#8fbfdc
-
-- description: More prompt
-  regex: ^--More--
-  color: f#ffaf00 bold
+- description: Standalone integer
+  regex: \b\d+\b
+  color: f#ffaf00
