@@ -2,6 +2,70 @@
 
 All notable changes to PAI (Personal AI Infrastructure) customizations.
 
+## [2.10] - 2026-01-21
+
+### Session Continuity Fix
+
+Fixed disconnected session continuity feature - the tools and hooks existed but the feature was never activated due to path inconsistencies and missing directory.
+
+### The Problem
+
+Session continuity was **designed but disconnected**:
+- `SessionProgress.ts` expected files in `MEMORY/STATE/progress/`
+- `FeatureRegistry.ts` expected files in `MEMORY/progress/` (wrong path)
+- `SessionContinuity.md` documented `MEMORY/progress/` (wrong path)
+- Neither directory existed because no progress files had ever been created
+- The `LoadContext.hook.ts` correctly checked `MEMORY/STATE/progress/` but silently returned null
+
+### The Fix
+
+**1. Path Alignment:**
+- Fixed `FeatureRegistry.ts:58` to use `MEMORY/STATE/progress/` (was `MEMORY/progress/`)
+- Fixed `SessionContinuity.md:60` documentation to reference correct path
+
+**2. Directory Bootstrap:**
+- Created `~/.claude/MEMORY/STATE/progress/` directory
+
+**3. Automatic Progress Creation (Option C):**
+Added integration with Development skill for proactive session continuity:
+
+- **Development/SKILL.md** - Added "Multi-Session Work" section with commands and triggers
+- **Development/Workflows/FullCycle.md** - Auto-creates progress file at start, handoff at finish
+- **Development/Workflows/WritePlan.md** - Auto-creates progress for plans with 3+ tasks
+
+### Auto-Creation Triggers
+
+Progress files are now auto-created for:
+- FullCycle workflow (always)
+- WritePlan workflow with 3+ tasks
+- Debug workflow after 2+ failed fix attempts
+- Any work user indicates will span multiple sessions
+
+### Updated Files
+- **CORE/Tools/FeatureRegistry.ts:58** - Fixed path to `MEMORY/STATE/progress/`
+- **CORE/Workflows/SessionContinuity.md:60** - Fixed documentation path
+- **Development/SKILL.md** - Added "Multi-Session Work" section
+- **Development/Workflows/FullCycle.md** - Added session continuity auto-creation and handoff
+- **Development/Workflows/WritePlan.md** - Added session continuity for 3+ task plans
+
+### How It Works Now
+
+At session start, `LoadContext.hook.ts` checks `~/.claude/MEMORY/STATE/progress/` and displays any active work:
+
+```
+📋 ACTIVE WORK (from previous sessions):
+
+🔵 my-feature
+   Objectives:
+   • Implement user authentication
+   Handoff: Auth model complete, ready for service implementation
+   Next steps:
+   → Write auth service tests
+   → Implement login endpoint
+```
+
+---
+
 ## [2.9] - 2026-01-18
 
 ### Amplifier Agent Pattern Integration
@@ -276,3 +340,4 @@ See `fixes-2026-01-16.md` for detailed documentation.
 | 2.7 | 2026-01-18 | Development skill enhancement (TDD/Verification checkpoints, expanded debugging phases, failure path examples) |
 | 2.8 | 2026-01-18 | Statusline context percentage fix (show % toward autocompact, not % of total 200k) |
 | 2.9 | 2026-01-18 | Amplifier agent pattern integration (memory safety, quality gate modes, thinking frameworks) |
+| 2.10 | 2026-01-21 | Session continuity fix (path alignment, directory bootstrap, auto-creation in Development skill) |
